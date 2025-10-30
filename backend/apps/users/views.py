@@ -32,6 +32,7 @@ def login_view(request):
         return JsonResponse({"error": "Tài khoản bị vô hiệu hoá"}, status=403)
 
     login(request, user)
+    print(f"user.is_superuser - {user.is_superuser}")
     return JsonResponse({
         "detail": "Success",
         "user": {
@@ -51,7 +52,7 @@ def logout_view(request):
 
 @login_required
 @require_GET
-def me(request):
+def home(request):
     u = request.user
     return JsonResponse({
         "user": {

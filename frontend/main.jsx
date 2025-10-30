@@ -43,6 +43,13 @@ function Main() {
         setIsAuthenticated(true);
     };
 
+    const handleLogout = () => {
+        setIsAuthenticated(false);
+        localStorage.removeItem("__current_app__");
+        localStorage.removeItem("token");
+    };
+
+
     const renderApp = () => {
         if (!isAuthenticated) {
             return <LoginPage onLoginSuccess={handleLoginSuccess}/>;
@@ -51,11 +58,11 @@ function Main() {
         switch (currentApp) {
             case "pinhole":
                 return (
-                    <PinholeIndex currentApp={currentApp} navigateApp={navigateApp}/>
+                    <PinholeIndex currentApp={currentApp} navigateApp={navigateApp} onLogout={handleLogout}/>
                 );
             default:
                 return (
-                    <PinholeIndex currentApp={currentApp} navigateApp={navigateApp}/>
+                    <PinholeIndex currentApp={currentApp} navigateApp={navigateApp} onLogout={handleLogout}/>
                 );
         }
     };

@@ -15,7 +15,7 @@ export default function LoginPage({onLoginSuccess}) {
     const [msg, setMsg] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:17500/users/csrf/", {
+        fetch("/get/users/csrf/", {
             method: "GET",
             credentials: "include",
         }).catch(() => {
@@ -28,7 +28,7 @@ export default function LoginPage({onLoginSuccess}) {
         setLoading(true);
         try {
             const csrftoken = getCookie("csrftoken");
-            const res = await fetch("http://localhost:17500/users/login/", {
+            const res = await fetch("/post/users/login/", {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -39,9 +39,9 @@ export default function LoginPage({onLoginSuccess}) {
             });
             const data = await res.json();
             if (!res.ok) {
-                setMsg(data.error || "Đăng nhập thất bại");
+                setMsg(data.error || "Login fail");
             } else {
-                setMsg("Đăng nhập thành công");
+                setMsg("Login successfully");
                 setTimeout(() => {
                     if (typeof onLoginSuccess === "function") {
                         onLoginSuccess();
@@ -49,7 +49,7 @@ export default function LoginPage({onLoginSuccess}) {
                 }, 500);
             }
         } catch (err) {
-            setMsg("Lỗi mạng, thử lại.");
+            setMsg("Server Down!");
         } finally {
             setLoading(false);
         }
@@ -57,39 +57,33 @@ export default function LoginPage({onLoginSuccess}) {
 
     return (
         <div className="min-h-screen grid place-items-center bg-gray-50">
-            <form
-                onSubmit={handleSubmit}
-                className="w-full max-w-sm bg-white p-6 rounded-2xl shadow"
-            >
-                <h1 className="text-xl font-semibold mb-4">Đăng nhập</h1>
-
-                <label className="block text-sm mb-1">User ID</label>
-                <input
-                    className="w-full border rounded-lg px-3 py-2 mb-3"
+            <form onSubmit={handleSubmit}
+                className="w-full max-w-xs bg-white p-6 pb-8 rounded-2xl shadow border border-gray-50">
+                <h1 className="text-xl font-semibold mb-4">Login</h1>
+                <label className="block text-sm mb-1">UserID</label>
+                <input className="w-full border rounded-lg px-3 py-2 mb-3"
                     value={userId}
                     onChange={(e) => setUserId(e.target.value)}
                     autoComplete="username"
-                    required
-                />
+                    required/>
 
-                <label className="block text-sm mb-1">Mật khẩu</label>
-                <input
-                    className="w-full border rounded-lg px-3 py-2 mb-4"
+                <label className="block text-sm mb-1">Password</label>
+                <input className="w-full border rounded-lg px-3 py-2 mb-4"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="current-password"
-                    required
-                />
+                    required/>
 
-                <button
-                    disabled={loading}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 disabled:opacity-60"
-                >
-                    {loading ? "Đang đăng nhập..." : "Đăng nhập"}
-                </button>
+                <div className="w-full flex justify-center pt-2">
+                    <button
+                        disabled={loading}
+                        className={`${loading ? 'w-[60%]' : 'w-[30%]'} bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 disabled:opacity-60 transition-all duration-300`}
+                    >
+                        {loading ? "Moving in..." : "Login"}
+                    </button>
+                </div>
 
-                {msg && <p className="mt-3 text-sm text-center">{msg}</p>}
             </form>
         </div>
     );
