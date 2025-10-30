@@ -1,0 +1,62 @@
+pm_report/
+    |
+    |__.docs/
+    |    |__requirements.txt
+    |
+    |__.dockerignore
+    |__docker-compose.yml
+    |__docker/
+    |    |__backend/
+    |    |    |__docker-entrypoint.sh
+    |    |    |__Dockerfile
+    |    |
+    |    |__frontend/
+    |    |    |__Dockerfile
+    |
+    |__backend/
+    |    |__requirements.txt
+    |    |__pm_report/
+    |    |    |__asgi.py
+    |    |    |__settings.py
+    |    |    |__urls.py
+    |    |    |__wsgi.py
+    |    |
+    |    |__apps/
+    |    |    |__api/
+    |    |    |    |__apps.py
+    |    |    |    |__utils.py
+    |    |    |    |__urls.py
+    |    |    |    |__views.py
+    |    |
+    |    |__modules/
+    |    |    |__connections/
+    |    |    |__query/
+    |
+    |__frontend/
+    |    |__package.json
+    |    |__package-lock.json
+    |    |__vite.config.mjs
+    |    |__server.js
+    |    |__node_modules/
+    |    |
+    |    |__index.html
+    |    |__styles.css
+    |    |__main.jsx
+    |    |
+    |    |__src/
+    |    |    |__bases/
+    |    |    |    |__bases.jsx
+    |    |    |    |__navbar.jsx
+    |    |    |    |__sidebar.jsx
+    |    |    |    |
+    |    |    |    |__components/
+    |    |    |    |    |__sidebar/
+    |    |    |    |    |    |__sidebar-body.jsx
+    |    |    |    |    |    |__sidebar-footer.jsx
+    |    |    |    |    |    |__sidebar-header.jsx
+    |    |    |    |    |    |__sidebar-open-button.jsx
+    |    |    | 
+    |    |    | 
+    |    |    |__apps/
+    |    |    |    |__pinhole/
+    |    |    |    |    |__pinhole-index.jsx

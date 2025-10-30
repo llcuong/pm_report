@@ -1,0 +1,28 @@
+{
+  "name": "pm-report-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "node server.js",
+    "preview": "vite preview --host --port 17501"
+  },
+  "dependencies": {
+    "connect-history-api-fallback": "^2.0.0",
+    "express": "^4.19.2",
+    "http-proxy-middleware": "^3.0.0"
+  },
+  "devDependencies": {
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "@tailwindcss/vite": "^4.1.15",
+    "@vitejs/plugin-react": "^4.7.0",
+    "date-fns": "^4.1.0",
+    "react": "^19.0.0",
+    "react-day-picker": "^9.11.1",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.1.15",
+    "vite": "^5.4.21"
+  }
+}

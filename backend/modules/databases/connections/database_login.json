@@ -1,0 +1,50 @@
+{
+    "vnedc_database": {
+        "server": "10.13.100.101",
+        "database": "VNEDC",
+        "username": "vnedc",
+        "password": "vnedc#2024"
+    },
+
+    "gdmes_database": {
+        "server": "10.13.102.22",
+        "database": "PMGMES",
+        "username": "sa",
+        "password": "!QAw3ed"
+    },
+
+    "gdmes_olap_database": {
+        "server": "10.13.102.22",
+        "database": "MES_OLAP",
+        "username": "sa",
+        "password": "!QAw3ed"
+    },
+
+    "lkmes_database": {
+        "server": "10.14.102.11",
+        "database": "PMGMES",
+        "username": "sa",
+        "password": "!QAw3ed"
+    },
+
+    "lkmes_olap_database": {
+        "server": "10.14.102.11",
+        "database": "MES_OLAP",
+        "username": "sa",
+        "password": "!QAw3ed"
+    },
+
+    "ltmes_database": {
+        "server": "10.15.102.11",
+        "database": "PMGMES",
+        "username": "sa",
+        "password": "!QAw3ed"
+    },
+
+    "ltmes_olap_database": {
+        "server": "10.15.102.11",
+        "database": "MES_OLAP",
+        "username": "sa",
+        "password": "!QAw3ed"
+    }
+}

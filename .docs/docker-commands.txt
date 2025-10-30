@@ -1,0 +1,50 @@
+#1 Build backend environments and code images
+
+docker build -f docker/backend/Dockerfile.env -t pm-report-runtime:2025.10.25 --target runtime . --no-cache
+docker build -f docker/backend/Dockerfile -t pm-report-backend:2025.10.25 . --no-cache
+
+
+
+#2 Build frontend environments and code images
+
+docker build -f docker/frontend/Dockerfile.env -t pm-report-frontend-env:2025.10.25 --target env . --no-cache
+docker build -f docker/frontend/Dockerfile -t pm-report-frontend:2025.10.25 . --no-cache
+
+
+
+#3 Save images to copy to server
+
+docker save pm-report-runtime:2025.10.25 -o pm-report-backend-env-2025-10-25.tar
+docker save pm-report-backend:2025.10.25 -o pm-report-backend-2025-10-25.tar
+
+docker image save -o pm-report-frontend-env_2025-10-25.tar pm-report-frontend-env:2025.10.25
+docker image save -o pm-report-frontend-2025-10-25.tar pm-report-frontend:2025.10.25
+
+
+
+#4 Load images after copy to server
+
+docker load -i pm-report-backend-env-2025-10-25.tar
+docker load -i pm-report-backend-2025-10-25.tar
+docker load -i pm-report-frontend-env-2025-10-25.tar
+docker load -i pm-report-frontend-2025-10-25.tar
+
+
+
+#5 Check images list
+
+docker images | findstr pm-report
+
+
+
+#6 Turn Up or Turn Off images
+
+docker compose up -d
+docker compose down -d
+
+
+
+#Check error
+docker logs --tail 10 pm-report-backend
+docker logs --tail 10 pm-report-frontend
+docker network create pm_net
