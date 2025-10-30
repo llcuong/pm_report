@@ -35,7 +35,7 @@ ALLOWED_HOSTS = ['localhost', 'pm-report-backend', '127.0.0.1', '*']
 
 INSTALLED_APPS = [
     'apps.api',
-    'apps.users'
+    'apps.users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,7 +57,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:17501",
+    "http://127.0.0.1:17501",
+]
+
+CSRF_TRUSTED_ORIGINS = [
     "http://localhost:17501",
     "http://127.0.0.1:17501",
 ]
@@ -135,3 +141,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = "accounts:profile"
 LOGOUT_REDIRECT_URL = "accounts:login"
+AUTH_USER_MODEL = 'users.CustomUser'
+
