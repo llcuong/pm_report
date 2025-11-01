@@ -12,7 +12,8 @@
   "dependencies": {
     "connect-history-api-fallback": "^2.0.0",
     "express": "^4.19.2",
-    "http-proxy-middleware": "^3.0.0"
+    "http-proxy-middleware": "^3.0.0",
+    "react-datepicker": "^8.8.0"
   },
   "devDependencies": {
     "@radix-ui/react-tooltip": "^1.2.8",

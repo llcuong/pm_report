@@ -1,8 +1,0 @@
-{
-  "welcome": "Chào mừng",
-  "hello": "Xin chào {{name}}",
-  "nav": {
-    "home": "Trang chủ",
-    "about": "Giới thiệu"
-  }
-}

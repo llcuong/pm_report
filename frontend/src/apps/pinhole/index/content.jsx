@@ -14,7 +14,7 @@ export default function PinholeContent() {
     const containerClass = useMemo(() => {
         const base = "rounded-lg border border-gray-200 flex flex-col";
         if (isFull) {
-            return `fixed inset-0 z-50 m-0 p-6 ${base} rounded-none bg-white`;
+            return `fixed inset-0 z-50 m-0 ml-18 p-6 ${base} rounded-none bg-white`;
         }
         return `h-[calc(100vh-11rem)] mt-3 ${base}`;
     }, [isFull]);

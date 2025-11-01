@@ -22,7 +22,6 @@ export default defineConfig({
             '@assets': fileURLToPath(new URL('./assets', import.meta.url)),
             '@apps': fileURLToPath(new URL('./src/apps', import.meta.url)),
             '@bases': fileURLToPath(new URL('./src/bases', import.meta.url)),
-            '@modules': fileURLToPath(new URL('./src/modules', import.meta.url)),
         },
     },
     server: {

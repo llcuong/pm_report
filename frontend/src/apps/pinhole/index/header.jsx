@@ -65,26 +65,26 @@ export default function PinholeHeader({
                     disabled={branchOptions.length === 0}
                 />
 
-                <button
-                    type="button"
-                    title={isFull ? "Thu nhỏ (Esc)" : "Phóng to"}
-                    onClick={() => setIsFull(v => !v)}
-                    className="w-[47px] h-[47px] flex items-center justify-center border-2 border-gray-200 rounded-lg hover:bg-gray-50"
-                    aria-pressed={isFull}
-                >
-                    {isFull ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-200" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 12H6"/>
-                        </svg>
-                    ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-600" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                  d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/>
-                        </svg>
-                    )}
-                </button>
+                {/*<button*/}
+                {/*    type="button"*/}
+                {/*    title={isFull ? "Thu nhỏ (Esc)" : "Phóng to"}*/}
+                {/*    onClick={() => setIsFull(v => !v)}*/}
+                {/*    className="w-[47px] h-[47px] flex items-center justify-center border-2 border-gray-200 rounded-lg hover:bg-gray-50"*/}
+                {/*    aria-pressed={isFull}*/}
+                {/*>*/}
+                {/*    {isFull ? (*/}
+                {/*        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-200" viewBox="0 0 24 24"*/}
+                {/*             fill="none" stroke="currentColor">*/}
+                {/*            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 12H6"/>*/}
+                {/*        </svg>*/}
+                {/*    ) : (*/}
+                {/*        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-600" viewBox="0 0 24 24"*/}
+                {/*             fill="none" stroke="currentColor">*/}
+                {/*            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"*/}
+                {/*                  d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/>*/}
+                {/*        </svg>*/}
+                {/*    )}*/}
+                {/*</button>*/}
             </div>
         </div>
     );

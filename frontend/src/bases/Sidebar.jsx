@@ -51,7 +51,7 @@ export default function LeftSidebar(props) {
                     navigateApp={props.navigateApp}
                     isExpanded={isOpen}
                 />
-                <SidebarFooter onLogout={props.onLogout}/>
+                <SidebarFooter onLogout={props.onLogout} isExpanded={isOpen}/>
             </aside>
 
             <div
