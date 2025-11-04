@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 17501;
 // const BACKEND_URL = process.env.BACKEND_URL || 'http://pm-report-backend:17500';
-const BACKEND_URL = 'http://127.0.0.1:17500';
+const BACKEND_URL = 'http://172.18.55.215:17500';
 
 app.use(express.json({limit: '5mb'}));
 app.use(express.urlencoded({extended: true}));

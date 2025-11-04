@@ -29,25 +29,25 @@ export default defineConfig({
         port: 17501,
         proxy: {
             '/get': {
-                target: 'http://localhost:17500',
+                target: 'http://172.18.55.215:17500',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/get/, ''),
                 configure: methodGuard('GET'),
             },
             '/post': {
-                target: 'http://localhost:17500',
+                target: 'http://172.18.55.215:17500',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/post/, ''),
                 configure: methodGuard('POST'),
             },
             '/put': {
-                target: 'http://localhost:17500',
+                target: 'http://172.18.55.215:17500',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/put/, ''),
                 configure: methodGuard('PUT'),
             },
             '/delete': {
-                target: 'http://localhost:17500',
+                target: 'http://172.18.55.215:17500',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/delete/, ''),
                 configure: methodGuard('DELETE'),
