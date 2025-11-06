@@ -1,18 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {createRoot} from "react-dom/client";
 import PinholeIndex from "@apps/pinhole/PinholeIndex";
-import LoginPage from "@apps/login/UserLogin";
 import "./styles.css";
 
 const CURRENT_APP_KEY = "__current_app__";
-
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2)
-        return decodeURIComponent(parts.pop().split(";").shift());
-    return null;
-}
 
 function Main() {
     const getInitApp = () =>
@@ -21,7 +12,6 @@ function Main() {
         "pinhole";
 
     const [currentApp, setCurrentApp] = useState(getInitApp);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const navigateApp = (appId) => {
         setCurrentApp(appId);
@@ -46,52 +36,16 @@ function Main() {
         }
     }, [currentApp]);
 
-    const handleLoginSuccess = () => {
-        setIsAuthenticated(true);
-    };
-
-    useEffect(() => {
-        fetch("/get/users/csrf/", {
-            method: "GET",
-            credentials: "include",
-        }).catch(() => {
-        });
-    }, []);
-    const handleLogout = async () => {
-        try {
-            const csrftoken = getCookie("csrftoken");
-            await fetch("/post/users/logout/", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrftoken || "",
-                },
-            });
-        } catch (err) {
-            console.error("Logout API error:", err);
-        } finally {
-            setIsAuthenticated(false);
-            localStorage.removeItem("__current_app__");
-            localStorage.removeItem("token");
-            //window.location.reload();
-        }
-    };
-
-
     const renderApp = () => {
-        // if (!isAuthenticated) {
-        //     return <LoginPage onLoginSuccess={handleLoginSuccess}/>;
-        // }
 
         switch (currentApp) {
             case "pinhole":
                 return (
-                    <PinholeIndex currentApp={currentApp} navigateApp={navigateApp} onLogout={handleLogout}/>
+                    <PinholeIndex currentApp={currentApp} navigateApp={navigateApp}/>
                 );
             default:
                 return (
-                    <PinholeIndex currentApp={currentApp} navigateApp={navigateApp} onLogout={handleLogout}/>
+                    <PinholeIndex currentApp={currentApp} navigateApp={navigateApp}/>
                 );
         }
     };

@@ -14,8 +14,8 @@ docker build -f docker/frontend/Dockerfile -t pm-report-frontend:2025-11-04 . --
 
 #3 Save images to copy to server
 
-docker save pm-report-runtime:2025.10.25 -o pm-report-backend-env-2025-11-04.tar
-docker save pm-report-backend:2025.10.27 -o pm-report-backend-2025-11-04.tar
+docker save pm-report-runtime:2025-11-04 -o pm-report-backend-env-2025-11-04.tar
+docker save pm-report-backend:2025-11-04 -o pm-report-backend-2025-11-04.tar
 
 docker image save -o pm-report-frontend-env-2025-11-04.tar pm-report-frontend-env:2025-11-04
 docker image save -o pm-report-frontend-2025-11-04.tar pm-report-frontend:2025-11-04
@@ -49,7 +49,10 @@ docker logs --tail 10 pm-report-backend
 docker logs --tail 10 pm-report-frontend
 docker network create pm_net
 
+docker rmi pm-report-frontend-env:2025.10.25
+docker rmi pm-report-frontend:2025.10.25
+docker rmi pm-report-backend:2025.10.25
+docker rmi pm-report-runtime:2025.10.25
 
-docker rmi pm-report-frontend-env:2025.11.01
-docker rmi pm-report-backend:2025.11.01
-docker rmi pm-report-runtime:2025.11.01
+docker compose stop pm-report-frontend
+docker start pm-report-frontend

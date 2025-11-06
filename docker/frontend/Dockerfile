@@ -4,11 +4,12 @@ WORKDIR /app
 COPY --from=pm-report-frontend-env:2025-11-04 /opt/env/dev/node_modules /app/node_modules
 
 COPY frontend/ /app/
-
-RUN npm run build
+RUN node -p "process.platform + ' ' + process.arch" \
+ && npm run build
 
 FROM node:22-slim AS runtime
 WORKDIR /app
+
 ENV NODE_ENV=production
 ENV PORT=17501
 ENV BACKEND_URL=http://pm-report-backend:17500

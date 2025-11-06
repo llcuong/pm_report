@@ -15,7 +15,6 @@ export default function Bases(props) {
             <LeftSidebar
                 currentApp={props.currentApp}
                 navigateApp={props.navigateApp}
-                onLogout={props.onLogout}
             />
 
             <main className="relative h-[calc(100vh-4rem)] ml-[76px] mr-[12px]">
