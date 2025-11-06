@@ -1,8 +1,8 @@
-import React, {useCallback, useEffect, useState} from "react"
-import SidebarOpenButton from "./components/sidebar/SidebarOpenButton.jsx"
-import SidebarHeader from "./components/sidebar/SidebarHeader.jsx"
-import SidebarBody from "./components/sidebar/SidebarBody.jsx"
-import SidebarFooter from "./components/sidebar/SidebarFooter.jsx"
+import React, { useCallback, useEffect, useState } from "react"
+import SidebarOpenButton from "./sidebar/SidebarOpenButton.jsx"
+import SidebarHeader from "./sidebar/SidebarHeader.jsx"
+import SidebarBody from "./sidebar/SidebarBody.jsx"
+import SidebarFooter from "./sidebar/SidebarFooter.jsx"
 
 const LEFT_SIDEBAR_STATE_KEY = "__sidebar_state__"
 
@@ -44,14 +44,14 @@ export default function LeftSidebar(props) {
                     isOpen ? "w-60 items-start pl-0" : "w-16 items-center pl-0"
                 ].join(" ")}
             >
-                <SidebarOpenButton onToggle={toggleSidebar} isExpanded={isOpen}/>
-                <SidebarHeader/>
+                <SidebarOpenButton onToggle={toggleSidebar} isExpanded={isOpen} />
+                <SidebarHeader />
                 <SidebarBody
                     currentApp={props.currentApp}
                     navigateApp={props.navigateApp}
                     isExpanded={isOpen}
                 />
-                <SidebarFooter onLogout={props.onLogout} isExpanded={isOpen}/>
+                <SidebarFooter onLogout={props.onLogout} isExpanded={isOpen} />
             </aside>
 
             <div
