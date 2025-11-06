@@ -2,7 +2,6 @@ import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import react from 'eslint-plugin-react';
-import prettier from 'eslint-plugin-prettier';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import unusedImports from 'eslint-plugin-unused-imports';
 
