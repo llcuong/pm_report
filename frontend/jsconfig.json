@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    // Bundler
+    "target": "ES2023",
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "baseUrl": "src",
+    "paths": {
+      "@assets/*": [
+        "assets/*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@configs/*": [
+        "configs/*"
+      ],
+      "@layouts/*": [
+        "layouts/*"
+      ],
+      "@modules/*": [
+        "modules/*"
+      ],
+      "@routes/*": [
+        "routes/*"
+      ]
+    },
+    "skipLibCheck": true,
+    "noEmit": true,
+    // Linting
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": [
+    "src"
+  ]
+}
