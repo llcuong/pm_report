@@ -1,14 +1,14 @@
-import React, {useMemo} from "react";
+import React, { useMemo } from "react";
 import * as Tooltip from '@radix-ui/react-tooltip';
 import PinholeHeader from "./header.jsx";
-import PinholeTable from "./table";
-import {usePinholeFilters} from "./useFilters";
-import {usePinholeData} from "./useData";
-import {useFullscreen} from "./useFullscreen";
+import PinholeTable from "./table.jsx";
+import { usePinholeFilters } from "./useFilters.js";
+import { usePinholeData } from "./useData.js";
+import { useFullscreen } from "../hooks/useFullScreen.jsx";
 
 export default function PinholeContent() {
     const filters = usePinholeFilters();
-    const {viewData, isFetching, isPendingUI} = usePinholeData(filters);
+    const { viewData, isFetching, isPendingUI } = usePinholeData(filters);
     const [isFull, setIsFull] = useFullscreen();
 
     const containerClass = useMemo(() => {
@@ -34,7 +34,7 @@ export default function PinholeContent() {
             <div className="p-6">
                 <div className="relative">
                     {(isFetching || isPendingUI) && (
-                        <div className="pointer-events-none absolute inset-0 rounded-lg bg-white/30"/>
+                        <div className="pointer-events-none absolute inset-0 rounded-lg bg-white/30" />
                     )}
 
                     <PinholeHeader
@@ -54,7 +54,7 @@ export default function PinholeContent() {
                     />
 
                     <div className={containerClass}>
-                        <PinholeTable rows={viewData?.rows || []}/>
+                        <PinholeTable rows={viewData?.rows || []} />
                     </div>
                 </div>
             </div>
