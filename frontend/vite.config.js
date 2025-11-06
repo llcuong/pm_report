@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import { fileURLToPath, URL } from 'node:url'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import path from 'node:path';
 
 function methodGuard(allowed) {
     return (proxy) => {
@@ -10,18 +10,20 @@ function methodGuard(allowed) {
                 res.statusCode = 405
                 res.end(`Method Not Allowed: expected ${allowed}, got ${req.method}`)
             }
-        })
-    }
-}
-
+        });
+    };
+};
 
 export default defineConfig({
     plugins: [react(), tailwindcss()],
     resolve: {
         alias: {
-            '@assets': fileURLToPath(new URL('./assets', import.meta.url)),
-            '@apps': fileURLToPath(new URL('./src/apps', import.meta.url)),
-            '@bases': fileURLToPath(new URL('./src/bases', import.meta.url)),
+            '@assets': path.resolve(__dirname, 'src/assets'),
+            'components': path.resolve(__dirname, 'src/components'),
+            'configs': path.resolve(__dirname, 'src/configs'),
+            'layouts': path.resolve(__dirname, 'src/layouts'),
+            'modules': path.resolve(__dirname, 'src/modules'),
+            'routes': path.resolve(__dirname, 'src/routes'),
         },
     },
     server: {
@@ -57,4 +59,4 @@ export default defineConfig({
     build: {
         outDir: 'dist'
     },
-})
+});
