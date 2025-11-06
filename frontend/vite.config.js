@@ -19,11 +19,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@assets': path.resolve(__dirname, 'src/assets'),
-      'components': path.resolve(__dirname, 'src/components'),
-      'configs': path.resolve(__dirname, 'src/configs'),
-      'layouts': path.resolve(__dirname, 'src/layouts'),
-      'modules': path.resolve(__dirname, 'src/modules'),
-      'routes': path.resolve(__dirname, 'src/routes'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@configs': path.resolve(__dirname, 'src/configs'),
+      '@layouts': path.resolve(__dirname, 'src/layouts'),
+      '@modules': path.resolve(__dirname, 'src/modules'),
+      '@routes': path.resolve(__dirname, 'src/routes'),
     },
   },
   server: {
