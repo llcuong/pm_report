@@ -4,17 +4,17 @@ import { format } from "date-fns";
 // ===========================================
 // Pinhole Report Data Declaration
 // ===========================================
-// INPUT
-// --> factory: string
-// --> branch: string
-// --> date: Date
-// --> aql: string | number
-// --> signal: AbortSignal
+// IMPORT
+// <-- factory: string
+// <-- branch: string
+// <-- date: Date
+// <-- aql: string | number
+// <-- signal: AbortSignal
 // -------------------------------------------
-// OUTPUT
-// <-- title: string
-// <--aql_list: (string | number)[]
-// <-- pinhole_data: Object[]
+// EXPORT
+// --> title: string
+// --> aql_list: (string | number)[]
+// --> pinhole_data: Object[]
 // ===========================================
 const getPinholeReportDataAPI = async ({ aql, factory, branch, date, signal }) => {
   try {
