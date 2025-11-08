@@ -1,58 +1,69 @@
-import React from "react"
-import { PinholeIcon } from "@assets/icons/pinhole-icon"
-function SidebarBodyBottom({currentApp}) {
-    return (
-        <></>
-    )
-}
+import PinholeIcon from "@assets/icons/pinhole-icon";
+import { useState, useEffect } from "react";
 
-function SidebarBodyTop(props) {
-    const apps = [
-        {id: "pinhole", name: "Pinhole", icon: PinholeIcon },
-    ]
+const ACTIVE_APP_ID = "__active_app_id__";
 
-    return (
-        <div className="flex-1 min-h-0 overflow-hidden px-1.5 pt-2 space-y-1">
-            {apps.map(app => {
-                const Icon = app.icon
-                const active = props.currentApp === app.id
-                return (
-                    <button
-                        key={app.id}
-                        onClick={() => props.navigateApp?.(app.id)}
-                        className={[
-                            "w-full h-[2.6rem] rounded-lg flex items-center transition-colors",
-                            active
-                                ? "bg-blue-600 text-white"
-                                : "text-gray-800 hover:text-blue-600 hover:bg-blue-100"
-                        ].join(" ")}
-                    >
-                        <div className="ml-[13px]"><Icon/></div>
-                        {props.isExpanded && (
-                            <span className="font-medium overflow-hidden whitespace-nowrap ml-[1.25rem]">
-                                {app.name}
-                          </span>
-                        )}
-                    </button>
-                )
-            })}
-        </div>
-    )
-}
+const appList = [
+  {
+    id: 1,
+    name: "Pinhole Report",
+    icon: <PinholeIcon />,
+    link: "pinhole-report",
+  },
+];
 
+const SidebarBody = ({ isExpanded }) => {
+  const [activeAppId, setActiveAppId] = useState(null);
 
-export default function SidebarBody(props) {
-    return (
-        <div className="flex-1 w-full flex flex-col">
-            <SidebarBodyTop
-                currentApp={props.currentApp}
-                navigateApp={props.navigateApp}
-                isExpanded={props.isExpanded}
-            />
+  useEffect(() => {
+    let storedAppId = Number(localStorage.getItem(ACTIVE_APP_ID));
+    if (storedAppId) {
+      setActiveAppId(storedAppId);
+    } else {
+      // Set default app
+      localStorage.setItem(ACTIVE_APP_ID, 1);
+      setActiveAppId(1);
+    };
+  }, []);
 
-            {props.currentApp ? (
-                <SidebarBodyBottom currentApp={props.currentApp}/>
-            ) : null}
-        </div>
-    )
-}
+  const handleOnClickApp = (appId) => {
+    localStorage.setItem(ACTIVE_APP_ID, appId);
+    setActiveAppId(appId);
+  };
+
+  return (
+    <div className="w-full flex-1 min-h-0 overflow-hidden px-1.5 py-1 space-y-1">
+      {appList.map((app) => {
+        let isActive = activeAppId === app.id;
+
+        return (
+          <div
+            key={app.id}
+            onClick={() => handleOnClickApp(app.id)}
+            className="flex items-center w-full h-12 rounded-lg cursor-pointer"
+          >
+            <a
+              href={`/${app.link}`}
+              className={[
+                "flex items-center w-full h-full pl-1 rounded-lg transition-colors duration-200",
+                isActive
+                  ? "bg-[#008B8C] text-white"
+                  : "hover:bg-[#87c3c3] hover:text-white",
+              ].join(" ")}
+            >
+              <div className="flex justify-center items-center w-10 h-10 text-xl">
+                {app.icon}
+              </div>
+
+              {isExpanded && (
+                <span className="ml-2 font-medium truncate">{app.name}</span>
+              )}
+            </a>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default SidebarBody;
