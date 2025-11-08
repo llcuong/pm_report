@@ -22,6 +22,9 @@
       "@configs/*": [
         "configs/*"
       ],
+      "@constants/*": [
+        "constants/*"
+      ],
       "@layouts/*": [
         "layouts/*"
       ],
