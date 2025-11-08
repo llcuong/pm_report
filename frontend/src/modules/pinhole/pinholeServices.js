@@ -2,11 +2,19 @@ import api from "@configs/api";
 import { format } from "date-fns";
 
 // ===========================================
-// Pinhole Report Data from API declaration
+// Pinhole Report Data Declaration
 // ===========================================
-// title: string
-// aql_list: (string | number)[]
-// pinhole_data: Object[]
+// INPUT
+// --> factory: string
+// --> branch: string
+// --> date: Date
+// --> aql: string | number
+// --> signal: AbortSignal
+// -------------------------------------------
+// OUTPUT
+// <-- title: string
+// <--aql_list: (string | number)[]
+// <-- pinhole_data: Object[]
 // ===========================================
 const getPinholeReportDataAPI = async ({ aql, factory, branch, date, signal }) => {
   try {
