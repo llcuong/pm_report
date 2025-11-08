@@ -7,8 +7,7 @@ export default function Navbar() {
 
           <div className="flex items-center flex-1 min-w-0">
             <div className="flex items-center shrink-0">
-              <div
-                className="text-[#008B8C] text-xl font-bold transition-colors">
+              <div>
                 <a href="/">
                   <img className="h-12"
                     src="https://www.pmgloves.com/images/PreciousMountain-EN-LOGO.jpg" alt="PM Group" />

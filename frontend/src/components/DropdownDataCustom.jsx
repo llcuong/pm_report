@@ -1,4 +1,5 @@
 import DropdownIcon from "@assets/icons/dropdown-icon";
+import { PM_GROUP_MAIN_COLOR } from "@constants/Color";
 import { useState, useEffect, useRef } from "react";
 
 const DropdownDataCustom = ({
@@ -69,13 +70,13 @@ const DropdownDataCustom = ({
         type="button"
         onClick={toggleDropdown}
         className={`flex items-center justify-between border-2 bg-white rounded-lg px-4 py-3 text-left
-                    ${isOpen ? "border-[#008B8C] shadow-md" : "border-gray-200"}  cursor-pointer transition-all 
-                    duration-200 hover:border-[#008B8C] ${buttonClassName}`}
+                    ${isOpen ? `border-[${PM_GROUP_MAIN_COLOR}] shadow-md` : "border-gray-200"}  cursor-pointer transition-all 
+                    duration-200 hover:border-[${PM_GROUP_MAIN_COLOR}] ${buttonClassName}`}
       >
-        <span className={`${isOpen ? 'text-[#008B8C]' : 'text-gray-900'} text-sm font-medium truncate`}>
+        <span className={`${isOpen ? `text-[${PM_GROUP_MAIN_COLOR}]` : 'text-gray-900'} text-sm font-medium truncate`}>
           {selectedOption?.label || placeholder}
         </span>
-        <div className="text-[#008B8C]">
+        <div className={`text-[${PM_GROUP_MAIN_COLOR}]`}>
           <DropdownIcon isOpen={isOpen} />
         </div>
       </button>
@@ -91,7 +92,7 @@ const DropdownDataCustom = ({
               key={option.value}
               onClick={() => handleSelectOption(option)}
               className={`cursor-pointer px-4 py-3  transition-colors duration-150 border-b border-gray-100 
-                          last:border-b-0 ${selectedOption?.value === option.value ? "bg-[#008B8C] " : "hover:bg-[#aececf]"}`}
+                          last:border-b-0 ${selectedOption?.value === option.value ? `bg-[${PM_GROUP_MAIN_COLOR}]` : "hover:bg-[#aececf]"}`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
@@ -99,7 +100,7 @@ const DropdownDataCustom = ({
                     {option.label}
                   </div>
                   {option.description && (
-                    <div className={`${selectedOption?.value === option.value ? "bg-[#008B8C] text-white" : "hover:bg-[#aececf] text-gray-500"} 
+                    <div className={`${selectedOption?.value === option.value ? `bg-[${PM_GROUP_MAIN_COLOR}] text-white` : "hover:bg-[#aececf] text-gray-500"} 
                                     text-xs mt-1 transition-colors duration-200`}>
                       {option.description}
                     </div>

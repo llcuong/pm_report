@@ -1,4 +1,5 @@
 import PinholeIcon from "@assets/icons/pinhole-icon";
+import { PM_GROUP_MAIN_COLOR } from "@constants/Color";
 import { useState, useEffect } from "react";
 
 const ACTIVE_APP_ID = "__active_app_id__";
@@ -47,7 +48,7 @@ const SidebarBody = ({ isExpanded }) => {
               className={[
                 "flex items-center w-full h-full pl-1 rounded-lg transition-colors duration-200",
                 isActive
-                  ? "bg-[#008B8C] text-white"
+                  ? `bg-[${PM_GROUP_MAIN_COLOR}] text-white`
                   : "hover:bg-[#87c3c3] hover:text-white",
               ].join(" ")}
             >
