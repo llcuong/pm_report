@@ -24,19 +24,15 @@ const getPinholeReportDataAPI = async ({ aql, factory, branch, date, signal }) =
       signal
     });
 
-    if (resOfPinholeReportData) {
+    return {
       // Declare data from API
-      return {
-        title: resOfPinholeReportData.data.title,
-        aql_list: resOfPinholeReportData.data.aql_list,
-        pinhole_data: resOfPinholeReportData.data.pinhole_data,
-      };
-    } else {
-      return null;
+      title: resOfPinholeReportData.data.title,
+      aql_list: resOfPinholeReportData.data.aql_list,
+      pinhole_data: resOfPinholeReportData.data.pinhole_data,
     };
   } catch (error) {
     console.error('Error fetching data: ', error);
-    throw error;
+    return null;
   };
 };
 
