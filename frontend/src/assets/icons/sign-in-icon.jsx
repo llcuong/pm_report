@@ -1,7 +1,7 @@
-const LoginIcon = () => {
+const SignInIcon = () => {
   return (
     <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <title>Login</title>
+      <title>Sign In</title>
       <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
         <polyline points="10 17 15 12 10 7" />
@@ -11,4 +11,4 @@ const LoginIcon = () => {
   );
 };
 
-export default LoginIcon;
+export default SignInIcon;
