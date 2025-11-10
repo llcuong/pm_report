@@ -1,10 +1,10 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
 import PinholeHeader from "./pinholeReportHeader/PinholeHeader";
 import PinholeBody from './pinholeReportBody/PinholeBody';
-import { PinholeDataProvider } from './contexts/PinholeDataContext';
 import { useContext } from 'react';
 import PendingUI from './pinholeReportBody/PendingUI';
 import { ZoomInButtonProvider } from './contexts/ZoomInButtonContext';
+import { PinholeDataProvider } from './contexts/PinholeDataContext';
 
 const MainPinholeReport = () => {
   return (

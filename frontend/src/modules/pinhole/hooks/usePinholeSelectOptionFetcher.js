@@ -1,9 +1,34 @@
-import { startTransition, useEffect, useRef, useState, useTransition } from "react";
+import { startTransition, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { getPinholeReportDataAPI } from "../pinholeServices";
-import { REFRESH_INTERVAL } from "../PinholeConstantData";
+import { BRANCH_BY_FACTORY_DATA, FACTORY_DATA, REFRESH_INTERVAL } from "../PinholeConstantData";
 import { format } from "date-fns";
 
-const usePinholeSelectOptionFetcher = ({ selectedFactory, selectedBranch }) => {
+const usePinholeSelectOptionFetcher = () => {
+  const factoryData = FACTORY_DATA;
+  const [selectedFactory, setSelectedFactory] = useState(factoryData[0]);
+
+  const [selectedBranch, setSelectedBranch] = useState(() =>
+    // Set default factory and relative branch
+    (BRANCH_BY_FACTORY_DATA[FACTORY_DATA[0].value] || [])[0]
+  );
+
+  // Change relative branches based on selected factory
+  const branchData = useMemo(() => {
+    let key = (selectedFactory?.value || "").toLowerCase();
+    return BRANCH_BY_FACTORY_DATA[key] || [];
+  }, [selectedFactory]);
+
+  useEffect(() => {
+    if (branchData.length > 0) {
+      setSelectedBranch(branchData[0]);
+    } else {
+      setSelectedBranch(undefined);
+    }
+  }, [branchData]);
+
+  // 
+  // 
+  // 
   const [selectedAql, setSelectedAql] = useState(undefined);
   const [aqlData, setAqlData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -74,6 +99,10 @@ const usePinholeSelectOptionFetcher = ({ selectedFactory, selectedBranch }) => {
   }, [selectedFactory, selectedBranch, selectedDate, selectedAql]);
 
   return {
+    // 
+    factoryData, selectedFactory, setSelectedFactory,
+    branchData, selectedBranch, setSelectedBranch,
+
     // Data for select options
     aqlData, selectedAql, setSelectedAql,
     selectedDate, setSelectedDate,

@@ -1,15 +1,15 @@
 import DropdownDataCustom from "@components/DropdownDataCustom";
 import DropdownDateCustom from "@components/DropdownDateCustom";
-import usePinholeSelectOptionContext from "../contexts/usePinholeSelectOptionContext";
 import PinholeResizeButton from "./PinholeResizeButton";
+import usePinholeDataContext from "../contexts/usePinholeDataContext";
 
 const PinholeDataOptions = () => {
   const {
     aqlData, selectedAql, setSelectedAql,
     factoryData, selectedFactory, setSelectedFactory,
     branchData, selectedBranch, setSelectedBranch,
-    selectedDate, setSelectedDate
-  } = usePinholeSelectOptionContext();
+    selectedDate, setSelectedDate,
+  } = usePinholeDataContext();
 
   return (
     <div className="shrink-0 flex gap-3">
