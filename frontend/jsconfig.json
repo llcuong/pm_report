@@ -33,6 +33,12 @@
       ],
       "@routes/*": [
         "routes/*"
+      ],
+      "@services/*": [
+        "services/*"
+      ],
+      "@utils/*": [
+        "utils/*"
       ]
     },
     "skipLibCheck": true,
