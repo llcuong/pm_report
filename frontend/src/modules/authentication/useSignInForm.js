@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { signInAPI } from "./authServices";
-import { getCookieAPI } from "@services/cookieServices";
-import getCookie from "@utils/getCookie";
+import { setCookieAPI } from "@services/cookieServices";
 import { useNavigate } from "react-router-dom";
+import getCookie from "@utils/getCookie";
 
 const useSignInForm = () => {
   const navigate = useNavigate();
@@ -14,11 +14,11 @@ const useSignInForm = () => {
   });
 
   useEffect(() => {
-    const getCookie = async () => {
-      await getCookieAPI();
+    const setCookie = async () => {
+      await setCookieAPI();
     };
 
-    getCookie();
+    setCookie();
   }, []);
 
   // Handle on typing value
