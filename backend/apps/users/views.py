@@ -1,7 +1,7 @@
 import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
@@ -12,7 +12,7 @@ def csrf(request):
     return JsonResponse({"detail": "CSRF cookie set"}, status=200)
 
 
-@csrf_protect
+@csrf_exempt
 @require_POST
 def login_view(request):
     try:
