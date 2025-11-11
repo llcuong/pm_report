@@ -55,37 +55,23 @@ const useSignInForm = () => {
       setSignInForm(prev => ({ ...prev, isLoading: false }));
     };
 
-    // Handle sign in time and status
-    const startTime = Date.now();
-
     // Call API
     try {
       let resOfSignIn = await signInAPI({ userId: signInForm.userId, password: signInForm.password });
 
-      // Set time for loading effect
-      let elapsedTime = Date.now() - startTime;
-      let remainingTime = Math.max(2000 - elapsedTime, 0);
+      if (resOfSignIn) {
+        setSignInForm(prev => ({
+          userId: '', password: '',
+          isLoading: false, errorMessage: ''
+        }));
 
-      setTimeout(async () => {
-        if (resOfSignIn) {
-          setSignInForm(prev => ({
-            userId: '', password: '',
-            isLoading: false, errorMessage: ''
-          }));
-
-          navigate('/admin');
-        } else {
-          setSignInForm(prev => ({ ...prev, isLoading: false, errorMessage: resOfSignIn?.message || 'Sign in failed!' }))
-        };
-      }, remainingTime);
+        navigate('/admin');
+      } else {
+        setSignInForm(prev => ({ ...prev, isLoading: false, errorMessage: resOfSignIn?.message || 'Sign in failed!' }))
+      };
     } catch (error) {
       console.error('Error sign in: ', error);
-      let elapsedTime = Date.now() - startTime;
-      let remainingTime = Math.max(2000 - elapsedTime, 0);
-
-      setTimeout(() => {
-        setSignInForm(prev => ({ ...prev, isLoading: false, errorMessage: 'Internal Server Error!' }))
-      }, remainingTime);
+      setSignInForm(prev => ({ ...prev, isLoading: false, errorMessage: 'Internal Server Error!' }));
     };
   };
 
