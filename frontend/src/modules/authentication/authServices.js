@@ -16,19 +16,26 @@ import getCookie from "@utils/getCookie";
 //                    --> is_staff: boolean }
 // ===========================================
 const signInAPI = async ({ userId, password }) => {
+  const token = getCookie('csrftoken');
   try {
-    let resOfLogin = await api.post('/post/users/login/',
+    let resOfSignIn = await api.post('/users/login/',
       {
         user_id: userId,
         password: password,
+      },
+      {
+        headers: {
+          'X-CSRFToken': token,
+        },
       });
+
     return {
       // Declare data from API
-      detail: resOfLogin.data?.detail,
-      userId: resOfLogin.data?.user.user_id,
-      userName: resOfLogin.data?.user.user_name,
-      userEmail: resOfLogin.data?.user.user_email,
-      isStaff: resOfLogin.data?.user.is_staff,
+      detail: resOfSignIn.data?.detail,
+      userId: resOfSignIn.data?.user.user_id,
+      userName: resOfSignIn.data?.user.user_name,
+      userEmail: resOfSignIn.data?.user.user_email,
+      isStaff: resOfSignIn.data?.user.is_staff,
     };
   } catch (error) {
     console.error('Error fetching data: ', error);
