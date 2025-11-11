@@ -1,8 +1,9 @@
 import api from "@configs/api";
 
-const getCookieAPI = async () => {
+const setCookieAPI = async () => {
   let resOfCookie = await api.get('/users/csrf');
   if (resOfCookie) {
+    console.log('Set cookie successfully!');
     return resOfCookie.data;
   } else {
     return null;
@@ -10,5 +11,5 @@ const getCookieAPI = async () => {
 };
 
 export {
-  getCookieAPI,
+  setCookieAPI,
 }
