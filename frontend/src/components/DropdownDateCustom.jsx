@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import "react-day-picker/dist/style.css";
 import DropdownIcon from "@assets/icons/dropdown-icon";
-import { PM_GROUP_MAIN_COLOR } from "@constants/Color";
 
 const DropdownDateCustom = ({ value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,10 +33,10 @@ const DropdownDateCustom = ({ value, onChange }) => {
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={`h-[47px] flex items-center justify-between border-2 bg-white rounded-lg px-4 py-3 text-left 
-                    ${isOpen ? `border-[${PM_GROUP_MAIN_COLOR}] shadow-md` : "border-gray-200"} cursor-pointer transition-all 
-                    duration-200 hover:border-[${PM_GROUP_MAIN_COLOR}] w-40`}
+                    ${isOpen ? `border-[#024A54] shadow-md` : "border-gray-200"} cursor-pointer transition-all 
+                    duration-200 hover:border-[#024A54] w-40`}
       >
-        <span className={`${isOpen ? `text-[${PM_GROUP_MAIN_COLOR}]` : "text-gray-900"}`}>
+        <span className={`${isOpen ? `text-[#024A54]` : "text-gray-900"}`}>
           {selectedDate ? format(selectedDate, "dd/MM/yyyy") : "Select date"}
         </span>
         <DropdownIcon isOpen={isOpen} />
@@ -53,7 +52,7 @@ const DropdownDateCustom = ({ value, onChange }) => {
             showOutsideDays
             disabled={{ after: new Date() }}
             style={{
-              "--rdp-accent-color": `${PM_GROUP_MAIN_COLOR}`,
+              "--rdp-accent-color": `#024A54`,
             }}
 
           />

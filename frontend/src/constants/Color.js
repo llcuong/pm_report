@@ -1,1 +1,0 @@
-export const PM_GROUP_MAIN_COLOR = '#024A54';
