@@ -2,7 +2,7 @@ export default function SidebarOpenButton({ onToggle, isExpanded }) {
   return (
     <button
       onClick={onToggle}
-      className="absolute top-[50%] -right-2.5 w-5 h-5 rounded-full bg-black text-white 
+      className="absolute top-[49.5%] -right-2.5 w-5 h-5 rounded-full bg-black text-white 
                  shadow ring-2 ring-white/80 transition hover:bg-[#87c3c3] cursor-pointer"
       aria-label="Toggle left sidebar"
       aria-expanded={isExpanded}
