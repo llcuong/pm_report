@@ -10,10 +10,10 @@ import getCookie from "@utils/getCookie";
 // -------------------------------------------
 // EXPORT
 // --> detail: string
-// --> user: Object { --> user_id: string
-//                    --> user_name: string
-//                    --> user_email: string
-//                    --> is_staff: boolean }
+// --> user: Object { --> userId: string
+//                    --> userName: string
+//                    --> userEmail: string
+//                    --> isStaff: boolean }
 // ===========================================
 const signInAPI = async ({ userId, password }) => {
   const token = getCookie('csrftoken');
@@ -32,10 +32,10 @@ const signInAPI = async ({ userId, password }) => {
     return {
       // Declare data from API
       detail: resOfSignIn.data?.detail,
-      userId: resOfSignIn.data?.user.user_id,
-      userName: resOfSignIn.data?.user.user_name,
-      userEmail: resOfSignIn.data?.user.user_email,
-      isStaff: resOfSignIn.data?.user.is_staff,
+      userId: resOfSignIn.data?.user.userId,
+      userName: resOfSignIn.data?.user.userName,
+      userEmail: resOfSignIn.data?.user.userEmail,
+      isStaff: resOfSignIn.data?.user.isStaff,
     };
   } catch (error) {
     console.error('Error fetching data: ', error);
