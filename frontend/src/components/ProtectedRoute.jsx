@@ -1,18 +1,18 @@
+import DashboardLayout from "@layouts/MainLayout";
 import getCookie from "@utils/getCookie";
 import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  let session = '';
-  useEffect(() => {
-    session = getCookie('sessionid');
-  }, []);
+  // Hard code to check security
+  const defaultUserName = 'admin172185521517500';
+  let userName = localStorage.getItem('user_name') || '';
+  let isAdmin = localStorage.getItem('is_admin') || '';
 
-  if (!session) {
-    console.log(session)
-    return <Navigate to='/sign-in' replace />
+  if (userName === defaultUserName || isAdmin === 'true') {
+    return <DashboardLayout />
   } else {
-    return <Outlet />
+    return <Navigate to='/sign-in' replace />
   };
 };
 
