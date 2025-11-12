@@ -1,4 +1,3 @@
-import { PM_GROUP_MAIN_COLOR } from "@constants/Color";
 import { useState, useEffect } from "react";
 import useSignInForm from "./useSignInForm";
 import CircularBackArrowIcon from "@assets/icons/circular-back-arrow-icon";
@@ -23,12 +22,6 @@ const MainAuthSignIn = () => {
   return (
     <div className="relative flex h-screen items-center justify-center overflow-hidden">
       <div className="w-90 h-130 flex flex-col justify-center items-center border border-gray-200 shadow-xl rounded-2xl">
-        <div className="p-2 w-full flex justify-center mb-2">
-          <a href="/" className="flex gap-2 transition-colors duration-200 hover:text-[#2d79f3]">
-            <CircularBackArrowIcon />
-            <p>Back to report</p>
-          </a>
-        </div>
         <div>
           <h2 className="text-lg font-medium">Sign in to PM Report</h2>
         </div>
@@ -84,11 +77,13 @@ const MainAuthSignIn = () => {
           <button className="self-end mt-5 ml-2 bg-[#151717] border-none 
                            text-white text-sm font-medium rounded-xl h-12 w-full cursor-pointer
                            hover:bg-[#252727]" type="submit">Sign In</button>
-          <p className="text-center text-black text-sm mx-1">Don't have an account? <span className="text-sm ml-1 text-[#2d79f3] font-medium cursor-pointer">
-            Sign Up
-          </span>
-          </p>
         </form>
+        <div className="p-2 w-full flex justify-center mb-2">
+          <a href="/" className="flex gap-2 transition-colors duration-200 hover:text-[#2d79f3]">
+            <CircularBackArrowIcon />
+            <p>Back to report</p>
+          </a>
+        </div>
       </div>
     </div>
   );
