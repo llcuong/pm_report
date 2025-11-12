@@ -3,13 +3,13 @@ import { signInAPI } from "./authServices";
 import { setCookieAPI } from "@services/cookieServices";
 import { useNavigate } from "react-router-dom";
 import getCookie from "@utils/getCookie";
+import { toast } from "react-toastify";
 
 const useSignInForm = () => {
   const navigate = useNavigate();
   const [signInForm, setSignInForm] = useState({
     userId: '',
     password: '',
-    errorMessage: '',
     isLoading: false,
   });
 
@@ -33,12 +33,12 @@ const useSignInForm = () => {
   const checkCredentials = ({ userId, password }) => {
     let isError = false;
     if (!userId || !password) {
-      setSignInForm(prev => ({ ...prev, errorMessage: 'Empty field: user id or password!' }));
+      toast.error('Empty field: user id or password!');
       isError = true;
     };
 
     if (typeof userId !== 'string' || typeof password !== 'string') {
-      setSignInForm(prev => ({ ...prev, errorMessage: 'Invalid input: user id or password!' }));
+      toast.error('Invalid input: user id or password!');
       isError = true;
     };
 
@@ -48,7 +48,7 @@ const useSignInForm = () => {
   // Sign In logic
   const handleSubmitSignInForm = async (event) => {
     event.preventDefault();
-    setSignInForm(prev => ({ ...prev, isLoading: true, errorMessage: '' }));
+    setSignInForm(prev => ({ ...prev, isLoading: true }));
 
     // Check input data
     if (!checkCredentials({ userId: signInForm.userId, password: signInForm.password })) {
@@ -62,16 +62,24 @@ const useSignInForm = () => {
       if (resOfSignIn) {
         setSignInForm(prev => ({
           userId: '', password: '',
-          isLoading: false, errorMessage: ''
+          isLoading: false,
         }));
+
+        // Hard code to security
+        localStorage.setItem('user_name', 'admin172185521517500');
+        localStorage.setItem('is_admin', 'true');
+
+        toast.success('Sign in successfully.');
 
         navigate('/admin');
       } else {
-        setSignInForm(prev => ({ ...prev, isLoading: false, errorMessage: resOfSignIn?.message || 'Sign in failed!' }))
+        setSignInForm(prev => ({ ...prev, isLoading: false }));
+        toast.error('Sign in failed!');
       };
     } catch (error) {
       console.error('Error sign in: ', error);
-      setSignInForm(prev => ({ ...prev, isLoading: false, errorMessage: 'Internal Server Error!' }));
+      setSignInForm(prev => ({ ...prev, isLoading: false }));
+      toast.error('Internal Server Error!');
     };
   };
 
