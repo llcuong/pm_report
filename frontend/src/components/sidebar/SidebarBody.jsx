@@ -1,68 +1,48 @@
-import PinholeIcon from "@assets/icons/pinhole-icon";
-import { PM_GROUP_MAIN_COLOR } from "@constants/Color";
 import { useState, useEffect } from "react";
-
-const ACTIVE_APP_ID = "__active_app_id__";
-
-const appList = [
-  {
-    id: 1,
-    name: "Pinhole Report",
-    icon: <PinholeIcon />,
-    link: "pinhole-report",
-  },
-];
+import SidebarBodyApp from "./SidebarBodyApp";
+import { ACTIVE_APP_ID } from "@components/AppIdWrapper";
+import { adminAppList, commonAppList } from "@constants/AppList";
 
 const SidebarBody = ({ isExpanded }) => {
   const [activeAppId, setActiveAppId] = useState(null);
 
+  // Hard code to check security
+  const defaultUserName = 'admin172185521517500';
+  let userName = localStorage.getItem('user_name') || '';
+  let isAdmin = localStorage.getItem('is_admin') || '';
+
+  let storedAppId = Number(sessionStorage.getItem(ACTIVE_APP_ID));
+
   useEffect(() => {
-    let storedAppId = Number(localStorage.getItem(ACTIVE_APP_ID));
     if (storedAppId) {
       setActiveAppId(storedAppId);
     } else {
       // Set default app
-      localStorage.setItem(ACTIVE_APP_ID, 1);
+      sessionStorage.setItem(ACTIVE_APP_ID, 1);
       setActiveAppId(1);
     };
-  }, []);
+  }, [storedAppId]);
 
   const handleOnClickApp = (appId) => {
-    localStorage.setItem(ACTIVE_APP_ID, appId);
+    sessionStorage.setItem(ACTIVE_APP_ID, appId);
     setActiveAppId(appId);
   };
 
   return (
     <div className="w-full flex-1 min-h-0 overflow-hidden px-1.5 py-1 space-y-1">
-      {appList.map((app) => {
-        let isActive = activeAppId === app.id;
-
-        return (
-          <div
-            key={app.id}
-            onClick={() => handleOnClickApp(app.id)}
-            className="flex items-center w-full h-12 rounded-lg cursor-pointer"
-          >
-            <a
-              href={`/${app.link}`}
-              className={[
-                "flex items-center w-full h-full pl-1 rounded-lg transition-colors duration-200",
-                isActive
-                  ? `bg-[${PM_GROUP_MAIN_COLOR}] text-white`
-                  : "hover:bg-[#87c3c3] hover:text-white",
-              ].join(" ")}
-            >
-              <div className="flex justify-center items-center w-10 h-10 text-xl">
-                {app.icon}
-              </div>
-
-              {isExpanded && (
-                <span className="ml-2 font-medium truncate">{app.name}</span>
-              )}
-            </a>
-          </div>
-        );
-      })}
+      <div className="h-[50%]">
+        <SidebarBodyApp appList={commonAppList} activeAppId={activeAppId} isExpanded={isExpanded} handleOnClickApp={handleOnClickApp} />
+      </div>
+      <div className={['h-0.5 bg-gray-300 rounded transition-all ease-linear', isExpanded ? 'w-52' : 'w-10'].join(' ')} />
+      <div className="h-[50%]">
+        {
+          (userName !== defaultUserName || isAdmin !== 'true') ? (
+            <></>
+          ) : (
+            <SidebarBodyApp appList={adminAppList} activeAppId={activeAppId} isExpanded={isExpanded} handleOnClickApp={handleOnClickApp} />
+          )
+        }
+      </div>
     </div>
   );
 };
