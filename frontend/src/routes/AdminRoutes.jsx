@@ -1,17 +1,21 @@
+import AppIdWrapper from "@components/AppIdWrapper";
 import Loadable from "@components/Loadable";
 import ProtectedRoute from "@components/ProtectedRoute";
-import MainLayout from "@layouts/MainLayout";
 import { lazy } from "react";
 
 const MainAdminPage = Loadable(lazy(() => import('@modules/admin/MainAdminPage')));
 
 const AdminRoutes = {
   path: '/admin',
-  element: <MainLayout />,
+  element: <ProtectedRoute />,
   children: [
     {
       index: true,
-      element: <MainAdminPage />
+      element: (
+        <AppIdWrapper value={5}>
+          <MainAdminPage />
+        </AppIdWrapper>
+      )
     },
   ],
 };

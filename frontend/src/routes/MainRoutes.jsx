@@ -1,5 +1,6 @@
+import AppIdWrapper from "@components/AppIdWrapper";
 import Loadable from "@components/Loadable";
-import MainLayout from "@layouts/MainLayout";
+import DashboardLayout from "@layouts/MainLayout";
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 
@@ -7,7 +8,7 @@ const MainPinholeReport = Loadable(lazy(() => import('@modules/pinhole/MainPinho
 
 const MainRoutes = {
   path: '/',
-  element: <MainLayout />,
+  element: <DashboardLayout />,
   children: [
     {
       // Set default route
@@ -16,7 +17,11 @@ const MainRoutes = {
     },
     {
       path: 'pinhole-report',
-      element: <MainPinholeReport />
+      element: (
+        <AppIdWrapper value={1}>
+          <MainPinholeReport />
+        </AppIdWrapper>
+      )
     },
   ],
 };
