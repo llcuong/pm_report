@@ -1,0 +1,54 @@
+{
+  "navbar": {
+    "version": "版本"
+  },
+  "sidebar": {
+    "menu": "選單",
+    "pinholeReport": "針孔報告",
+    "adminPanel": "管理面板",
+    "signIn": "登入",
+    "signOut": "登出"
+  },
+  "outlet": {
+    "pinholeReport": {
+      "header": {
+        "pinholeTitle": "針孔檢測資料",
+        "factory": "工廠",
+        "branch": "分廠"
+      },
+      "body": {
+        "machine": "機器",
+        "line": "產線",
+        "workOrder": "工單",
+        "aql": "AQL",
+        "place": "地點",
+        "noData": "無資料"
+      }
+    },
+    "admin": {}
+  },
+  "signIn": {
+    "signInTitle": "登入至 PM 報告系統",
+    "userId": "使用者 ID",
+    "password": "密碼",
+    "rememberMe": "記住我",
+    "forgotPassword": "忘記密碼?",
+    "signInButton": "登入",
+    "backToReport": "返回報告"
+  },
+  "toastify": {
+    "success": {
+      "signInSuccessfully": "登入成功。",
+      "signOutSuccessfully": "登出成功。"
+    },
+    "error": {
+      "emptyField": "缺少欄位：使用者編號或密碼！",
+      "invalidInput": "無效輸入：使用者 ID 或密碼！",
+      "signInFailed": "登入失敗。"
+    }
+  },
+  "error": {
+    "internalServerError": "伺服器內部錯誤！"
+  },
+  "language": "語言"
+}

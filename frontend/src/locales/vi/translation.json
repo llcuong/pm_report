@@ -1,0 +1,54 @@
+{
+  "navbar": {
+    "version": "phiên bản"
+  },
+  "sidebar": {
+    "menu": "Danh mục",
+    "pinholeReport": "Báo cáo Pinhole",
+    "adminPanel": "Bảng quản trị",
+    "signIn": "Đăng nhập",
+    "signOut": "Đăng xuất"
+  },
+  "outlet": {
+    "pinholeReport": {
+      "header": {
+        "pinholeTitle": "Dữ liệu kiểm tra Pinhole",
+        "factory": "Nhà máy",
+        "branch": "Chi nhánh"
+      },
+      "body": {
+        "machine": "Máy",
+        "line": "Dây chuyền",
+        "workOrder": "Lệnh sản xuất",
+        "aql": "AQL",
+        "place": "Địa điểm",
+        "noData": "Không có dữ liệu"
+      }
+    },
+    "admin": {}
+  },
+  "signIn": {
+    "signInTitle": "Đăng nhập vào hệ thống PM Report",
+    "userId": "Mã người dùng",
+    "password": "Mật khẩu",
+    "rememberMe": "Ghi nhớ đăng nhập",
+    "forgotPassword": "Quên mật khẩu?",
+    "signInButton": "Đăng nhập",
+    "backToReport": "Quay lại báo cáo"
+  },
+  "toastify": {
+    "success": {
+      "signInSuccessfully": "Đăng nhập thành công.",
+      "signOutSuccessfully": "Đăng xuất thành công."
+    },
+    "error": {
+      "emptyField": "Thiếu trường: mã người dùng hoặc mật khẩu!",
+      "invalidInput": "Thông tin không hợp lệ: mã người dùng hoặc mật khẩu!",
+      "signInFailed": "Đăng nhập thất bại."
+    }
+  },
+  "error": {
+    "internalServerError": "Lỗi máy chủ nội bộ!"
+  },
+  "language": "Ngôn ngữ"
+}

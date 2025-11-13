@@ -1,0 +1,54 @@
+{
+  "navbar": {
+    "version": "版本"
+  },
+  "sidebar": {
+    "menu": "菜单",
+    "pinholeReport": "针孔报告",
+    "adminPanel": "管理面板",
+    "signIn": "登录",
+    "signOut": "登出"
+  },
+  "outlet": {
+    "pinholeReport": {
+      "header": {
+        "pinholeTitle": "针孔检测数据",
+        "factory": "工厂",
+        "branch": "分厂"
+      },
+      "body": {
+        "machine": "机器",
+        "line": "生产线",
+        "workOrder": "工单",
+        "aql": "AQL",
+        "place": "地点",
+        "noData": "无数据"
+      }
+    },
+    "admin": {}
+  },
+  "signIn": {
+    "signInTitle": "登录到 PM 报告系统",
+    "userId": "用户 ID",
+    "password": "密码",
+    "rememberMe": "记住我",
+    "forgotPassword": "忘记密码?",
+    "signInButton": "登录",
+    "backToReport": "返回报告"
+  },
+  "toastify": {
+    "success": {
+      "signInSuccessfully": "登录成功。",
+      "signOutSuccessfully": "登出成功。"
+    },
+    "error": {
+      "emptyField": "缺少字段：用户编号或密码！",
+      "invalidInput": "无效输入：用户 ID 或密码！",
+      "signInFailed": "登录失败。"
+    }
+  },
+  "error": {
+    "internalServerError": "服务器内部错误！"
+  },
+  "language": "语言"
+}
