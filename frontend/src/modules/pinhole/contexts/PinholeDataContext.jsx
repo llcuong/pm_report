@@ -3,13 +3,32 @@ import usePinholeSelectOptionFetcher from "../hooks/usePinholeSelectOptionFetche
 
 // Returned data and data status with API stored in context
 /**
+ * @typedef {Object} FactoryData
+ * @property {string | null} value
+ * @property {string | null} label
+ * @property {string | null} description
+ */
+
+/**
+ * @typedef {Object} BranchData
+ * @property {string | null} value
+ * @property {string | null} label
+ */
+
+/**
+ * @typedef {Object} AqlData
+ * @property {string | null} value
+ * @property {string | null} label
+ */
+
+/**
  * @typedef {Object} PinholeDataContextValue
- * @property {string | null} selectedFactory
- * @property {(value: string | null) => void} setSelectedFactory
- * @property {string | null} selectedBranch
- * @property {(value: string | null) => void} setSelectedBranch
- * @property {string | number | null} selectedAql
- * @property {(value: string | number | null) => void} setSelectedAql
+ * @property {FactoryData | undefined} selectedFactory
+ * @property {(value: FactoryData | null) => void} setSelectedFactory
+ * @property {BranchData | undefined} selectedBranch
+ * @property {(value: BranchData | undefined) => void} setSelectedBranch
+ * @property {AqlData | undefined} selectedAql
+ * @property {(value: AqlData | undefined) => void} setSelectedAql
  * @property {Date} selectedDate
  * @property {(value: Date) => void} setSelectedDate
  * 
@@ -29,7 +48,7 @@ export const PinholeDataProvider = ({ children }) => {
 
   const {
     aqlData, selectedAql, setSelectedAql,
-    factoryData, selectedFactory, setSelectedFactory,
+    selectedFactory, setSelectedFactory,
     branchData, selectedBranch, setSelectedBranch,
     selectedDate, setSelectedDate,
     viewData,
@@ -38,7 +57,7 @@ export const PinholeDataProvider = ({ children }) => {
 
   const stateValueList = {
     aqlData, selectedAql, setSelectedAql,
-    factoryData, selectedFactory, setSelectedFactory,
+    selectedFactory, setSelectedFactory,
     branchData, selectedBranch, setSelectedBranch,
     selectedDate, setSelectedDate,
     viewData,
