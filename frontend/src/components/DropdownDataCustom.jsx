@@ -34,13 +34,13 @@ const DropdownDataCustom = ({
         type="button"
         onClick={toggleDropdown}
         className={`flex items-center justify-between border-2 bg-white rounded-lg px-4 py-3 text-left
-          ${isOpen ? "border-[#024A54] shadow-md" : "border-gray-200"} cursor-pointer transition-all 
-          duration-200 hover:border-[#024A54] ${buttonClassName}`}
+          ${isOpen ? "border-[#1b9eaf] shadow-md" : "border-gray-200"} cursor-pointer transition-all 
+          duration-200 hover:border-[#1b9eaf] ${buttonClassName}`}
       >
-        <span className={`${isOpen ? "text-[#024A54]" : "text-gray-900"} text-sm font-medium truncate`}>
+        <span className={`${isOpen ? "text-[#1b9eaf]" : "text-gray-900"} text-sm font-medium truncate`}>
           {selectedOption?.label || t(placeholder)}
         </span>
-        <div className="text-[#024A54]">
+        <div className="text-[#1b9eaf]">
           <DropdownIcon isOpen={isOpen} />
         </div>
       </button>
@@ -56,7 +56,7 @@ const DropdownDataCustom = ({
               key={option.value}
               onClick={() => handleSelectOption(option)}
               className={`cursor-pointer px-4 py-3 transition-colors duration-150 border-b border-gray-100 
-                last:border-b-0 ${selectedOption?.value === option.value ? "bg-[#024A54]" : "hover:bg-[#aececf]"}`}
+                last:border-b-0 ${selectedOption?.value === option.value ? "bg-[#1b9eaf]" : "hover:bg-[#aececf]"}`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
@@ -69,7 +69,7 @@ const DropdownDataCustom = ({
                   {option.description && (
                     <div
                       className={`text-xs mt-1 transition-colors duration-200 ${selectedOption?.value === option.value
-                        ? "bg-[#024A54] text-white"
+                        ? "bg-[#1b9eaf] text-white"
                         : "hover:bg-[#aececf] text-gray-500"
                         }`}
                     >

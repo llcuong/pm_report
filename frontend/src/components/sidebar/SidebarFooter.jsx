@@ -21,7 +21,7 @@ export default function SidebarFooter({ isExpanded, onSignOutSuccess }) {
             <a
               href='/sign-in'
               className="flex items-center w-full h-full rounded-lg text-center 
-                     transition-colors duration-200 hover:bg-[#87c3c3] hover:text-white"
+                     transition-colors duration-200 hover:bg-gray-400 hover:text-white"
             >
               <div className="flex justify-center items-center w-10 h-10 text-xl">
                 <SignInIcon />
@@ -36,7 +36,7 @@ export default function SidebarFooter({ isExpanded, onSignOutSuccess }) {
           ) : (
             <button
               className="flex items-center w-full h-full rounded-lg text-center cursor-pointer
-                     transition-colors duration-200 hover:bg-[#87c3c3] hover:text-white"
+                     transition-colors duration-200 hover:bg-gray-400 hover:text-white"
               onClick={handleSignOut}
             >
               <div className="flex justify-center items-center w-10 h-10 text-xl">

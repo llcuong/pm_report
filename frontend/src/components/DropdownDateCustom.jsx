@@ -36,10 +36,10 @@ const DropdownDateCustom = ({ value, onChange }) => {
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={`h-[47px] flex items-center justify-between border-2 bg-white rounded-lg px-4 py-3 text-left 
-                    ${isOpen ? `border-[#024A54] shadow-md` : "border-gray-200"} cursor-pointer transition-all 
-                    duration-200 hover:border-[#024A54] w-40`}
+                    ${isOpen ? `border-[#1b9eaf] shadow-md` : "border-gray-200"} cursor-pointer transition-all 
+                    duration-200 hover:border-[#1b9eaf] w-40`}
       >
-        <span className={`${isOpen ? `text-[#024A54]` : "text-gray-900"}`}>
+        <span className={`${isOpen ? `text-[#1b9eaf]` : "text-gray-900"}`}>
           {selectedDate ? format(selectedDate, "dd/MM/yyyy") : `${t('selectDate')}`}
         </span>
         <DropdownIcon isOpen={isOpen} />
@@ -55,7 +55,7 @@ const DropdownDateCustom = ({ value, onChange }) => {
             showOutsideDays
             disabled={{ after: new Date() }}
             style={{
-              "--rdp-accent-color": `#024A54`,
+              "--rdp-accent-color": `#1b9eaf`,
             }}
 
           />

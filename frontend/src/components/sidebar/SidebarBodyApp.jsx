@@ -38,8 +38,8 @@ const SidebarBodyApp = ({ appList, activeAppId, isActive, isExpanded, handleOnCl
               className={[
                 "flex items-center w-full h-full pl-1 rounded-lg transition-colors duration-200",
                 isActive
-                  ? `bg-[#024A54] text-white`
-                  : "hover:bg-[#87c3c3] hover:text-white",
+                  ? `bg-[#1b9eaf] text-white`
+                  : "hover:bg-gray-400 hover:text-white",
               ].join(" ")}
             >
               <div className="flex justify-center items-center w-10 h-10 text-xl">
