@@ -50,11 +50,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -64,23 +63,28 @@ MIDDLEWARE = [
 CSRF_COOKIE_NAME = "csrftoken"
 SESSION_COOKIE_NAME = "sessionid"
 
-CSRF_COOKIE_SAMESITE = "None"
-SESSION_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SAMESITE = "Lax"
+# CSRF_COOKIE_SAMESITE = "None"
+# SESSION_COOKIE_SAMESITE = "None"
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://172.18.51.108:17501",
-    "http://localhost:17501",
-    "http://127.0.0.1:17501",
-]
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://172.18.51.108:17501",
+#     "http://172.18.55.215:17501",
+#     "http://localhost:17501",
+#     "http://127.0.0.1:17501",
+# ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://172.18.51.108:17501",
-    "http://localhost:17501",
-    "http://127.0.0.1:17501",
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://172.18.51.108:17501",
+#     "http://172.18.55.215:17501",
+#     "http://localhost:17501",
+#     "http://127.0.0.1:17501",
+# ]
 
 ROOT_URLCONF = 'pm_report.urls'
 

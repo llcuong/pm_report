@@ -30,12 +30,14 @@ const TableCell = ({ hour, row }) => {
           className="bg-gray-900 text-white px-3 py-1.5 rounded text-xs shadow-lg z-50"
           sideOffset={5}
         >
-          <div className="text-left">
+           <div className="text-left">
             <div className="font-semibold mb-0.5">{hour}:00</div>
-            <div>{t('outlet.pinholeReport.body.workOrder')}:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_wo`] || ""}</div>
-            <div>{t('outlet.pinholeReport.body.aql')}:&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_aql`] || ""}</div>
-            <div>---------------------------</div>
-            <div>{t('outlet.pinholeReport.body.place')}:&nbsp;&nbsp;{row[`${hour}_place`] || ""}</div>
+            <div>WO:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_wo`] || ""}</div>
+            <div>Standard&nbsp;AQL:&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_aql`] || ""}</div>
+            <div>Inspect&nbsp;&nbsp;&nbsp;&nbsp;AQL:&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_qcaql`] || ""}</div>
+            <div>---------------------------------</div>
+            <div>Place:&nbsp;&nbsp;{row[`${hour}_place`] || ""}</div>
+            <div>Item:&nbsp;&nbsp;&nbsp;{row[`${hour}_item`] || ""}</div>
           </div>
           <Tooltip.Arrow className="fill-gray-900" />
         </Tooltip.Content>
