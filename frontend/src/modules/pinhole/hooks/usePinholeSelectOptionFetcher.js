@@ -2,33 +2,35 @@ import { startTransition, useEffect, useMemo, useRef, useState, useTransition } 
 import { getPinholeReportDataAPI } from "../pinholeServices";
 import { BRANCH_BY_FACTORY_DATA, FACTORY_DATA, REFRESH_INTERVAL } from "../PinholeConstantData";
 import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
 const usePinholeSelectOptionFetcher = () => {
-  const factoryData = FACTORY_DATA;
-  const [selectedFactory, setSelectedFactory] = useState(factoryData[0]);
+  const { t } = useTranslation();
+  /****************************************************
+   *              Factory & Branch Data
+   ****************************************************/
+  const [searchParamFactory] = useSearchParams();
 
-  const [selectedBranch, setSelectedBranch] = useState(() =>
-    // Set default factory and relative branch
-    (BRANCH_BY_FACTORY_DATA[FACTORY_DATA[0].value] || [])[0]
+  const [selectedFactory, setSelectedFactory] = useState(() =>
+    FACTORY_DATA.find(factory => factory.value === searchParamFactory.get('factory')) || FACTORY_DATA[0]
   );
 
   // Change relative branches based on selected factory
   const branchData = useMemo(() => {
     let key = (selectedFactory?.value || "").toLowerCase();
-    return BRANCH_BY_FACTORY_DATA[key] || [];
+    return BRANCH_BY_FACTORY_DATA.find(branch => branch.id === key).branch || []
   }, [selectedFactory]);
 
-  useEffect(() => {
-    if (branchData.length > 0) {
-      setSelectedBranch(branchData[0]);
-    } else {
-      setSelectedBranch(undefined);
-    }
-  }, [branchData]);
+  const [selectedBranch, setSelectedBranch] = useState(branchData[0]);
 
-  // 
-  // 
-  // 
+  // Set up selected branch data again
+  useEffect(() => {
+    setSelectedBranch(branchData[0]);
+  }, [branchData]);
+  /****************************************************
+   *        Aql & Date & View Data & Status
+   ****************************************************/
   const [selectedAql, setSelectedAql] = useState(undefined);
   const [aqlData, setAqlData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -55,17 +57,17 @@ const usePinholeSelectOptionFetcher = () => {
     };
 
     try {
-      const res = await getPinholeReportDataAPI(dataOptionParams);
+      const resOfData = await getPinholeReportDataAPI(dataOptionParams);
 
       // Check current client request
       if (seq !== reqSeq.current) return;
 
       // Get returned data
-      const title = res.title || "Pinhole Inspection Data";
-      const rows = Array.isArray(res.pinhole_data) ? res.pinhole_data : [];
+      const title = resOfData?.title || t('outlet.pinholeReport.header.pinholeTitle');
+      const rows = Array.isArray(resOfData?.pinhole_data) ? resOfData.pinhole_data : [];
 
-      const nextAqlList = Array.isArray(res.aql_list)
-        ? res.aql_list.map(v => ({ value: String(v), label: String(v) }))
+      const nextAqlList = Array.isArray(resOfData?.aql_list)
+        ? resOfData?.aql_list.map(v => ({ value: String(v), label: String(v) }))
         : [];
 
       setAqlData(nextAqlList);
@@ -80,7 +82,7 @@ const usePinholeSelectOptionFetcher = () => {
       setIsAPIError(true);
       if (seq === reqSeq.current) {
         startTransition(() =>
-          setViewData(prev => ({ ...prev, title: "Internal Server Error!" }))
+          setViewData(prev => ({ ...prev, title: t('error.internalServerError') }))
         );
       };
     } finally {
@@ -88,19 +90,20 @@ const usePinholeSelectOptionFetcher = () => {
     };
   };
 
+  // Get data based on selected data options
   useEffect(() => {
-    // Fetch data immediately
     getPinholeReportData();
+  }, [selectedBranch, selectedDate, selectedAql]);
 
-    // Fetch data repeatedly
+  // Get data after REFRESH_INTERVAL time in milisecond
+  useEffect(() => {
     const timer = setInterval(getPinholeReportData, REFRESH_INTERVAL);
-
     return () => clearInterval(timer);
-  }, [selectedFactory, selectedBranch, selectedDate, selectedAql]);
+  }, [selectedBranch, selectedDate, selectedAql]);
 
   return {
     // 
-    factoryData, selectedFactory, setSelectedFactory,
+    selectedFactory, setSelectedFactory,
     branchData, selectedBranch, setSelectedBranch,
 
     // Data for select options
