@@ -6,6 +6,8 @@ import SidebarFooter from "./sidebar/SidebarFooter";
 
 const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isSignOutSuccess, setIsSignOutSuccess] = useState(false);
+
   const toggleSidebar = useCallback(() => setIsExpanded(v => !v), []);
 
   // Toggle Sidebar Effect
@@ -32,7 +34,7 @@ const Sidebar = () => {
         <SidebarOpenButton onToggle={toggleSidebar} isExpanded={isExpanded} />
         <SidebarHeader isExpanded={isExpanded} />
         <SidebarBody isExpanded={isExpanded} />
-        <SidebarFooter isExpanded={isExpanded} />
+        <SidebarFooter onSignOutSuccess={() => setIsSignOutSuccess(true)} isExpanded={isExpanded} />
       </aside>
 
       <div
