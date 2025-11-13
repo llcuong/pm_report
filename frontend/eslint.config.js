@@ -14,13 +14,11 @@ export default [
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
-      parserOptions: {
-        ecmaFeatures: { jsx: true },
-      },
+      ecmaFeatures: { jsx: true },
     },
     plugins: {
       react,
-      "no-unused-imports": unusedImports,
+      "unused-imports": unusedImports,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       'jsx-a11y': jsxA11y,
@@ -34,8 +32,18 @@ export default [
       'react/react-in-jsx-scope': 'off',
       'jsx-a11y/alt-text': 'warn',
       'jsx-a11y/anchor-is-valid': 'warn',
-      "no-unused-vars": ["warn", { args: "none", ignoreRestSiblings: true }],
-      "no-unused-imports/no-unused-imports": "warn",
+
+      "no-unused-vars": 'off',
+      'unused-imports/no-unused-imports': 'warn',
+      'unused-imports/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+        },
+      ],
     },
     settings: {
       react: { version: 'detect' },
