@@ -1,21 +1,16 @@
 import SignInIcon from "@assets/icons/sign-in-icon";
 import SignOutIcon from "@assets/icons/sign-out-icon";
 import { ACTIVE_APP_ID } from "@components/AppIdWrapper";
-import { useNavigate } from "react-router-dom";
+import useSignOut from "@hooks/useSignOut";
+import { useTranslation } from "react-i18next";
 
-export default function SidebarFooter({ isExpanded }) {
-  const navigate = useNavigate();
+export default function SidebarFooter({ isExpanded, onSignOutSuccess }) {
+  const { t } = useTranslation();
 
-  const defaultUserName = 'admin172185521517500';
-  let userName = localStorage.getItem('user_name') || '';
-  let isAdmin = localStorage.getItem('is_admin') || '';
-
-  const signOut = () => {
-    localStorage.removeItem('user_name');
-    localStorage.removeItem('is_admin');
-    sessionStorage.setItem(ACTIVE_APP_ID, 1);
-    navigate('/');
-  };
+  const {
+    defaultUserName, userName, isAdmin,
+    handleSignOut,
+  } = useSignOut({ onSignOutSuccess });
 
   return (
     <div className="h-12 w-full flex flex-col items-center justify-center">
@@ -34,7 +29,7 @@ export default function SidebarFooter({ isExpanded }) {
 
               {isExpanded && (
                 <span className="ml-2 font-medium truncate">
-                  Sign In
+                  {t('sidebar.signIn')}
                 </span>
               )}
             </a>
@@ -42,7 +37,7 @@ export default function SidebarFooter({ isExpanded }) {
             <button
               className="flex items-center w-full h-full rounded-lg text-center cursor-pointer
                      transition-colors duration-200 hover:bg-[#87c3c3] hover:text-white"
-              onClick={signOut}
+              onClick={handleSignOut}
             >
               <div className="flex justify-center items-center w-10 h-10 text-xl">
                 <SignOutIcon />
@@ -50,7 +45,7 @@ export default function SidebarFooter({ isExpanded }) {
 
               {isExpanded && (
                 <span className="ml-2 font-medium truncate">
-                  Sign Out
+                  {t('sidebar.signOut')}
                 </span>
               )}
             </button>
