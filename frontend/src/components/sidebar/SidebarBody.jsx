@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import SidebarBodyApp from "./SidebarBodyApp";
 import { ACTIVE_APP_ID } from "@components/AppIdWrapper";
-import { adminAppList, commonAppList } from "@constants/AppList";
+import { authAppList, commonAppList } from "@constants/AppList";
 
 const SidebarBody = ({ isExpanded }) => {
   const [activeAppId, setActiveAppId] = useState(null);
@@ -39,7 +39,7 @@ const SidebarBody = ({ isExpanded }) => {
           (userName !== defaultUserName || isAdmin !== 'true') ? (
             <></>
           ) : (
-            <SidebarBodyApp appList={adminAppList} activeAppId={activeAppId} isExpanded={isExpanded} handleOnClickApp={handleOnClickApp} />
+            <SidebarBodyApp appList={authAppList} activeAppId={activeAppId} isExpanded={isExpanded} handleOnClickApp={handleOnClickApp} />
           )
         }
       </div>
