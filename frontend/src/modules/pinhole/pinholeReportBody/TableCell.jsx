@@ -30,9 +30,11 @@ const TableCell = ({ hour, row }) => {
           <div className="text-left">
             <div className="font-semibold mb-0.5">{hour}:00</div>
             <div>WO:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_wo`] || ""}</div>
-            <div>AQL:&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_aql`] || ""}</div>
-            <div>---------------------------</div>
+            <div>Standard&nbsp;AQL:&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_aql`] || ""}</div>
+            <div>Inspect&nbsp;AQL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_qcaql`] || ""}</div>
+            <div>---------------------------------</div>
             <div>Place:&nbsp;&nbsp;{row[`${hour}_place`] || ""}</div>
+            <div>Item:&nbsp;&nbsp;&nbsp;{row[`${hour}_item`] || ""}</div>
           </div>
           <Tooltip.Arrow className="fill-gray-900" />
         </Tooltip.Content>
