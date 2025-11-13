@@ -4,7 +4,7 @@ import PinholeIcon from "@assets/icons/pinhole-icon";
 export const commonAppList = [
   {
     id: 1,
-    name: "Pinhole Report",
+    name: "pinholeReport",
     icon: <PinholeIcon />,
     link: "pinhole-report",
   },
@@ -13,7 +13,7 @@ export const commonAppList = [
 export const adminAppList = [
   {
     id: 5,
-    name: "Admin Panel",
+    name: "adminPanel",
     icon: <AdminPanelIcon />,
     link: "admin",
   },
