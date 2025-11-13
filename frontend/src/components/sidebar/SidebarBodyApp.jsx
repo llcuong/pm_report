@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 // Declare data type of props
 /**
  * @typedef {Object} App
@@ -18,6 +20,8 @@
  */
 
 const SidebarBodyApp = ({ appList, activeAppId, isActive, isExpanded, handleOnClickApp }) => {
+  const { t } = useTranslation();
+
   return (
     <>
       {appList.map(app => {
@@ -43,7 +47,7 @@ const SidebarBodyApp = ({ appList, activeAppId, isActive, isExpanded, handleOnCl
               </div>
 
               {isExpanded && (
-                <span className="ml-2 font-medium truncate">{app.name}</span>
+                <span className="ml-2 font-medium truncate">{t(`sidebar.${app.name}`)}</span>
               )}
             </a>
           </div>

@@ -1,7 +1,10 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
 import getColorClassname from "../utils/getColorClassname";
+import { useTranslation } from 'react-i18next';
 
 const TableCell = ({ hour, row }) => {
+  const { t } = useTranslation();
+
   const value = (row[hour] ?? "").toString().trim();
   const colorCode = (row[`${hour}_color`] ?? "").toString().trim();
   const colorClassname = getColorClassname(colorCode);
@@ -29,10 +32,10 @@ const TableCell = ({ hour, row }) => {
         >
           <div className="text-left">
             <div className="font-semibold mb-0.5">{hour}:00</div>
-            <div>WO:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_wo`] || ""}</div>
-            <div>AQL:&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_aql`] || ""}</div>
+            <div>{t('outlet.pinholeReport.body.workOrder')}:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_wo`] || ""}</div>
+            <div>{t('outlet.pinholeReport.body.aql')}:&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_aql`] || ""}</div>
             <div>---------------------------</div>
-            <div>Place:&nbsp;&nbsp;{row[`${hour}_place`] || ""}</div>
+            <div>{t('outlet.pinholeReport.body.place')}:&nbsp;&nbsp;{row[`${hour}_place`] || ""}</div>
           </div>
           <Tooltip.Arrow className="fill-gray-900" />
         </Tooltip.Content>

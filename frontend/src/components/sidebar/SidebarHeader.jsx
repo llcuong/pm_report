@@ -1,12 +1,15 @@
 import MenuIcon from "@assets/icons/menu-icon";
+import { useTranslation } from "react-i18next";
 
 export default function SidebarHeader({ isExpanded }) {
+  const { t } = useTranslation();
+
   return (
     <div className="h-12 w-full flex flex-col items-center justify-center">
       {
         isExpanded ? (
           <>
-            <span className="p-2 text-xl font-medium">Menu</span>
+            <span className="p-2 text-xl font-medium">{t('sidebar.menu')}</span>
           </>
         ) : (
           <div className="p-2">

@@ -2,14 +2,17 @@ import { useContext, useMemo } from "react";
 import { HOUR_LIST } from "../PinholeConstantData";
 import TableTuple from "./TableTuple";
 import usePinholeDataContext from "../contexts/usePinholeDataContext";
+import { useTranslation } from "react-i18next";
 
 const PinholeTable = () => {
   const {
     viewData,
   } = usePinholeDataContext();
 
+  const { t } = useTranslation();
+
   const dataFieldNameList = [
-    'Machine', 'Line', 'WorkOrder', 'AQL',
+    'machine', 'line', 'workOrder', 'aql',
   ];
 
   return (
@@ -19,7 +22,9 @@ const PinholeTable = () => {
           <tr className="text-left">
             {
               dataFieldNameList.map((dataFieldName, key) => (
-                <th key={key} className="px-3 py-2 font-semibold border-b border-gray-200 bg-gray-200">{dataFieldName}</th>
+                <th key={key} className="px-3 py-2 font-semibold border-b border-gray-200 bg-gray-200">
+                  {t(`outlet.pinholeReport.body.${dataFieldName}`)}
+                </th>
               ))
             }
             {HOUR_LIST.map(hour => (

@@ -2,21 +2,25 @@ import DropdownDataCustom from "@components/DropdownDataCustom";
 import DropdownDateCustom from "@components/DropdownDateCustom";
 import PinholeResizeButton from "./PinholeResizeButton";
 import usePinholeDataContext from "../contexts/usePinholeDataContext";
+import { FACTORY_DATA } from "../PinholeConstantData";
+import { useTranslation } from "react-i18next";
 
 const PinholeDataOptions = () => {
   const {
     aqlData, selectedAql, setSelectedAql,
-    factoryData, selectedFactory, setSelectedFactory,
+    selectedFactory, setSelectedFactory,
     branchData, selectedBranch, setSelectedBranch,
     selectedDate, setSelectedDate,
   } = usePinholeDataContext();
+
+  const { t } = useTranslation();
 
   return (
     <div className="shrink-0 flex gap-3">
       <DropdownDataCustom
         key={"aql"}
         options={aqlData}
-        placeholder="AQL"
+        placeholder={`${t('outlet.pinholeReport.body.aql')}`}
         value={selectedAql}
         onChange={setSelectedAql}
         buttonClassName="w-22"
@@ -27,8 +31,8 @@ const PinholeDataOptions = () => {
       <DropdownDateCustom value={selectedDate} onChange={setSelectedDate} />
 
       <DropdownDataCustom
-        options={factoryData}
-        placeholder="Factory"
+        options={FACTORY_DATA}
+        placeholder={`${t('outlet.pinholeReport.body.factory')}`}
         value={selectedFactory}
         onChange={setSelectedFactory}
         buttonClassName="w-40"
@@ -38,7 +42,7 @@ const PinholeDataOptions = () => {
       <DropdownDataCustom
         key={selectedFactory?.value}
         options={branchData}
-        placeholder="Branch"
+        placeholder={`${t('outlet.pinholeReport.body.branch')}`}
         value={selectedBranch}
         onChange={setSelectedBranch}
         buttonClassName="w-24"

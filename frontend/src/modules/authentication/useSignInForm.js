@@ -4,9 +4,13 @@ import { setCookieAPI } from "@services/cookieServices";
 import { useNavigate } from "react-router-dom";
 import getCookie from "@utils/getCookie";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const useSignInForm = () => {
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
+
   const [signInForm, setSignInForm] = useState({
     userId: '',
     password: '',
@@ -33,12 +37,12 @@ const useSignInForm = () => {
   const checkCredentials = ({ userId, password }) => {
     let isError = false;
     if (!userId || !password) {
-      toast.error('Empty field: user id or password!');
+      toast.error(t('toastify.error.emptyField'));
       isError = true;
     };
 
     if (typeof userId !== 'string' || typeof password !== 'string') {
-      toast.error('Invalid input: user id or password!');
+      toast.error(t('toastify.error.invalidInput'));
       isError = true;
     };
 
@@ -69,17 +73,17 @@ const useSignInForm = () => {
         localStorage.setItem('user_name', 'admin172185521517500');
         localStorage.setItem('is_admin', 'true');
 
-        toast.success('Sign in successfully.');
+        toast.success(t('toastify.success.signInSuccessfully'));
 
         navigate('/admin');
       } else {
         setSignInForm(prev => ({ ...prev, isLoading: false }));
-        toast.error('Sign in failed!');
+        toast.error(t('toastify.error.signInFailed'));
       };
     } catch (error) {
       console.error('Error sign in: ', error);
       setSignInForm(prev => ({ ...prev, isLoading: false }));
-      toast.error('Internal Server Error!');
+      toast.error(t('error.internalServerError'));
     };
   };
 
