@@ -4,11 +4,14 @@ import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import "react-day-picker/dist/style.css";
 import DropdownIcon from "@assets/icons/dropdown-icon";
+import { useTranslation } from "react-i18next";
 
 const DropdownDateCustom = ({ value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(value || new Date());
   const dayPickerRef = useRef();
+
+  const { t } = useTranslation();
 
   // Handle open & close action of Day Picker
   useEffect(() => {
@@ -37,7 +40,7 @@ const DropdownDateCustom = ({ value, onChange }) => {
                     duration-200 hover:border-[#024A54] w-40`}
       >
         <span className={`${isOpen ? `text-[#024A54]` : "text-gray-900"}`}>
-          {selectedDate ? format(selectedDate, "dd/MM/yyyy") : "Select date"}
+          {selectedDate ? format(selectedDate, "dd/MM/yyyy") : `${t('selectDate')}`}
         </span>
         <DropdownIcon isOpen={isOpen} />
       </button>
