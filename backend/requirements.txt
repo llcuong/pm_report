@@ -2,3 +2,4 @@ Django==5.2.7
 gunicorn==22.0.0
 pyodbc==5.3.0
 django-cors-headers
+mssql-django

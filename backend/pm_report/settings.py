@@ -111,8 +111,16 @@ WSGI_APPLICATION = 'pm_report.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.getenv('SQLITE_PATH', str(BASE_DIR / 'db.sqlite3')),
+        'ENGINE': 'mssql',
+        'NAME': 'VN_ANALYSIS',
+        'USER': 'report',
+        'PASSWORD': 'report#123',
+        'HOST': '10.13.100.101',
+        'PORT': '1433',
+
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+        }
     }
 }
 
