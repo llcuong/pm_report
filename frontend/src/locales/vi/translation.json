@@ -1,11 +1,14 @@
 {
   "navbar": {
-    "version": "phiên bản"
+    "version": "phiên bản",
+    "profile": "Hồ sơ"
   },
   "sidebar": {
     "menu": "Danh mục",
     "pinholeReport": "Báo cáo Pinhole",
-    "adminPanel": "Bảng quản trị",
+    "ipqcData": "Dữ liệu IPQC",
+    "countingData": "Dữ liệu đếm",
+    "userManagement": "Quản lý người dùng",
     "signIn": "Đăng nhập",
     "signOut": "Đăng xuất"
   },

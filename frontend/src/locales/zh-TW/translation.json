@@ -1,11 +1,14 @@
 {
   "navbar": {
-    "version": "版本"
+    "version": "版本",
+    "profile": "個人資料"
   },
   "sidebar": {
     "menu": "選單",
     "pinholeReport": "針孔報告",
-    "adminPanel": "管理面板",
+    "ipqcData": "IPQC 資料",
+    "countingData": "計數資料",
+    "userManagement": "使用者管理",
     "signIn": "登入",
     "signOut": "登出"
   },

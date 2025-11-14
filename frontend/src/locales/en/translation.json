@@ -1,11 +1,14 @@
 {
   "navbar": {
-    "version": "version"
+    "version": "version",
+    "profile": "Profile"
   },
   "sidebar": {
     "menu": "Menu",
     "pinholeReport": "Pinhole Report",
-    "adminPanel": "Admin Panel",
+    "ipqcData": "IPQC Data",
+    "countingData": "Counting Data",
+    "userManagement": "User Manangement",
     "signIn": "Sign In",
     "signOut": "Sign Out"
   },
