@@ -1,5 +1,8 @@
-import AdminPanelIcon from "@assets/icons/admin-panel-icon";
+
 import PinholeIcon from "@assets/icons/pinhole-icon";
+import { LuUser } from "react-icons/lu";
+import { MdOutlineHighQuality } from "react-icons/md";
+import { SiCountingworkspro } from "react-icons/si";
 
 export const commonAppList = [
   {
@@ -10,11 +13,23 @@ export const commonAppList = [
   },
 ];
 
-export const adminAppList = [
+export const authAppList = [
   {
-    id: 5,
-    name: "adminPanel",
-    icon: <AdminPanelIcon />,
-    link: "admin",
+    id: 6,
+    name: "ipqcData",
+    icon: <MdOutlineHighQuality className="text-2xl" />,
+    link: "auth-user/ipqc-data",
+  },
+  {
+    id: 7,
+    name: "countingData",
+    icon: <SiCountingworkspro className="text-2xl" />,
+    link: "auth-user/counting-data",
+  },
+  {
+    id: 8,
+    name: "userManagement",
+    icon: <LuUser className="text-2xl" />,
+    link: "auth-user/user-management",
   },
 ];
