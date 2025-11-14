@@ -16,23 +16,15 @@ const AdminRoutes = {
     {
       index: true,
       element: (
-        <AppIdWrapper value={5}>
+        <AppIdWrapper value={10}>
           <MainAuthorUser />
-        </AppIdWrapper>
-      )
-    },
-    {
-      path: 'user-profile',
-      element: (
-        <AppIdWrapper value={6}>
-          <MainUserProfile />
         </AppIdWrapper>
       )
     },
     {
       path: 'ipqc-data',
       element: (
-        <AppIdWrapper value={7}>
+        <AppIdWrapper value={11}>
           <MainIPQCData />
         </AppIdWrapper>
       )
@@ -40,7 +32,7 @@ const AdminRoutes = {
     {
       path: 'counting-data',
       element: (
-        <AppIdWrapper value={8}>
+        <AppIdWrapper value={12}>
           <MainCountingData />
         </AppIdWrapper>
       )
@@ -48,8 +40,16 @@ const AdminRoutes = {
     {
       path: 'user-management',
       element: (
-        <AppIdWrapper value={9}>
+        <AppIdWrapper value={13}>
           <MainUserManangement />
+        </AppIdWrapper>
+      )
+    },
+    {
+      path: 'user-profile',
+      element: (
+        <AppIdWrapper value={21}>
+          <MainUserProfile />
         </AppIdWrapper>
       )
     },
