@@ -1,12 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainRoutes from "./MainRoutes";
-import AuthRoutes from "./AuthRoutes";
-import AdminRoutes from "./AdminRoutes";
+import AuthenRoutes from "./AuthenRoutes";
+import AuthorRoutes from "./AuthorRoutes";
 
 const router = createBrowserRouter([
   MainRoutes,
-  AuthRoutes,
-  AdminRoutes,
+  AuthenRoutes,
+  AuthorRoutes,
 ], { basename: '/' });
 
 export default router;
