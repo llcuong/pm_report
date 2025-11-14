@@ -3,9 +3,9 @@ import { lazy } from "react";
 
 const MainAuthSignIn = Loadable(lazy(() => import('@modules/authentication/MainAuthSignIn')));
 
-const AuthRoutes = {
+const AuthenRoutes = {
   path: '/sign-in',
   element: <MainAuthSignIn />,
 };
 
-export default AuthRoutes;
+export default AuthenRoutes;
