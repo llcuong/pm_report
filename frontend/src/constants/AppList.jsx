@@ -15,19 +15,19 @@ export const commonAppList = [
 
 export const authAppList = [
   {
-    id: 6,
+    id: 11,
     name: "ipqcData",
     icon: <MdOutlineHighQuality className="text-2xl" />,
     link: "auth-user/ipqc-data",
   },
   {
-    id: 7,
+    id: 12,
     name: "countingData",
     icon: <SiCountingworkspro className="text-2xl" />,
     link: "auth-user/counting-data",
   },
   {
-    id: 8,
+    id: 13,
     name: "userManagement",
     icon: <LuUser className="text-2xl" />,
     link: "auth-user/user-management",
