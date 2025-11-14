@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import useSignInForm from "./useSignInForm";
-import CircularBackArrowIcon from "@assets/icons/circular-back-arrow-icon";
-import LockIcon from "@assets/icons/lock-icon";
-import EyeOpenIcon from "@assets/icons/eye-open-icon";
-import AtIcon from "@assets/icons/at-icon";
-import EyeCloseIcon from "@assets/icons/eye-close-icon";
 import { useTranslation } from "react-i18next";
+import { CiAt, CiLock } from "react-icons/ci";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { IoArrowBackCircleOutline } from "react-icons/io5";
+import useSignInForm from "./useSignInForm";
+
 import { LANG } from "@hooks/useLang";
 
 const MainAuthSignIn = () => {
@@ -44,9 +43,9 @@ const MainAuthSignIn = () => {
             <label className="text-[#151717] font-semibold">{t('signIn.userId')}</label>
           </div>
           <div className="border-2 border-[#ecedec] rounded-xl h-12 flex items-center pl-2 
-                          transition-colors duration-200 ease-in-out focus-within:border-2 focus-within:border-[#2d79f3]">
-            <AtIcon />
-            <input type="text" className="ml-2 rounded-xl border-none w-[85%] h-full focus:outline-none"
+                          transition-colors duration-200 ease-in-out focus-within:border-2 focus-within:border-[#2d79f3] text-2xl">
+            <CiAt />
+            <input type="text" className="ml-2 rounded-xl border-none w-[85%] h-full focus:outline-none text-lg"
               placeholder="Enter your ID"
               name="userId"
               value={signInForm.userId}
@@ -59,10 +58,10 @@ const MainAuthSignIn = () => {
             <label className="text-[#151717] font-semibold">{t('signIn.password')}</label>
           </div>
           <div className="border-2 border-[#ecedec] rounded-xl h-12 flex items-center pl-2 
-                          transition-colors duration-200 ease-in-out focus-within:border-2 focus-within:border-[#2d79f3]">
-            <LockIcon />
+                          transition-colors duration-200 ease-in-out focus-within:border-2 focus-within:border-[#2d79f3] text-2xl">
+            <CiLock />
             <input type={`${isShowPassword ? 'text' : 'password'}`}
-              className="ml-2 rounded-xl border-none w-[85%] h-full focus:outline-none"
+              className="ml-2 rounded-xl border-none w-[85%] h-full focus:outline-none text-lg"
               placeholder="Enter your Password"
               name="password"
               value={signInForm.password}
@@ -70,10 +69,10 @@ const MainAuthSignIn = () => {
               autoComplete="password"
               required />
 
-            <button className="cursor-pointer" type="button"
+            <button className="cursor-pointer text-lg mr-2" type="button"
               onClick={handleShowPassword}
             >
-              {isShowPassword ? <EyeOpenIcon /> : <EyeCloseIcon />}
+              {isShowPassword ? <FaRegEye /> : <FaRegEyeSlash />}
             </button>
           </div>
 
@@ -91,7 +90,7 @@ const MainAuthSignIn = () => {
         </form>
         <div className="p-2 w-full flex justify-center mb-2">
           <a href="/" className="flex gap-2 transition-colors duration-200 hover:text-[#2d79f3]">
-            <CircularBackArrowIcon />
+            <span className="text-2xl"><IoArrowBackCircleOutline /></span>
             <p>{t('signIn.backToReport')}</p>
           </a>
         </div>
