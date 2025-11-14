@@ -75,7 +75,7 @@ const useSignInForm = () => {
 
         toast.success(t('toastify.success.signInSuccessfully'));
 
-        navigate('/admin');
+        navigate('/auth-user');
       } else {
         setSignInForm(prev => ({ ...prev, isLoading: false }));
         toast.error(t('toastify.error.signInFailed'));
