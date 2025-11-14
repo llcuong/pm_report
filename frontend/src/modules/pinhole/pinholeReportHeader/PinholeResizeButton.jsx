@@ -1,4 +1,4 @@
-import ResizeIcon from "@assets/icons/resize-icon";
+import { SlSizeFullscreen } from "react-icons/sl";
 import { useContext } from "react";
 import { ZoomInButtonContext } from "../contexts/ZoomInButtonContext";
 import useZoomInButtonContext from "../contexts/useZoomInButtonContext";
@@ -17,7 +17,7 @@ const PinholeResizeButton = () => {
                   cursor-pointer transition-colors duration-200 hover:border-[#1b9eaf]`}
       aria-pressed={isZoomIn}
     >
-      <ResizeIcon />
+      <SlSizeFullscreen />
     </button>
   );
 };

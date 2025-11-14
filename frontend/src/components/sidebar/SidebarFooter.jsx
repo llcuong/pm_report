@@ -1,5 +1,4 @@
-import SignInIcon from "@assets/icons/sign-in-icon";
-import SignOutIcon from "@assets/icons/sign-out-icon";
+import { PiSignInFill, PiSignOutFill } from "react-icons/pi";
 import { ACTIVE_APP_ID } from "@components/AppIdWrapper";
 import useSignOut from "@hooks/useSignOut";
 import { useTranslation } from "react-i18next";
@@ -21,10 +20,10 @@ export default function SidebarFooter({ isExpanded, onSignOutSuccess }) {
             <a
               href='/sign-in'
               className="flex items-center w-full h-full rounded-lg text-center 
-                     transition-colors duration-200 hover:bg-gray-400 hover:text-white"
+                     transition-colors duration-200 hover:bg-[#aececf]"
             >
-              <div className="flex justify-center items-center w-10 h-10 text-xl">
-                <SignInIcon />
+              <div className="flex justify-center items-center w-10 h-10 text-2xl">
+                <PiSignInFill />
               </div>
 
               {isExpanded && (
@@ -36,11 +35,11 @@ export default function SidebarFooter({ isExpanded, onSignOutSuccess }) {
           ) : (
             <button
               className="flex items-center w-full h-full rounded-lg text-center cursor-pointer
-                     transition-colors duration-200 hover:bg-gray-400 hover:text-white"
+                     transition-colors duration-200 hover:bg-[#aececf]"
               onClick={handleSignOut}
             >
-              <div className="flex justify-center items-center w-10 h-10 text-xl">
-                <SignOutIcon />
+              <div className="flex justify-center items-center w-10 h-10 text-2xl">
+                <PiSignOutFill />
               </div>
 
               {isExpanded && (

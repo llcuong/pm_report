@@ -1,4 +1,4 @@
-import MenuIcon from "@assets/icons/menu-icon";
+import { IoMenuOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 
 export default function SidebarHeader({ isExpanded }) {
@@ -13,7 +13,7 @@ export default function SidebarHeader({ isExpanded }) {
           </>
         ) : (
           <div className="p-2">
-            <MenuIcon />
+            <span className="text-3xl"><IoMenuOutline /></span>
           </div>
         )
       }
