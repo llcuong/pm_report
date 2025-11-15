@@ -1,5 +1,5 @@
 import * as Tooltip from '@radix-ui/react-tooltip';
-import getColorClassname from "../utils/getColorClassname";
+import getColorClassname from "../getColorClassname";
 import { useTranslation } from 'react-i18next';
 
 const TableCell = ({ hour, row }) => {
@@ -30,7 +30,7 @@ const TableCell = ({ hour, row }) => {
           className="bg-gray-900 text-white px-3 py-1.5 rounded text-xs shadow-lg z-50"
           sideOffset={5}
         >
-           <div className="text-left">
+          <div className="text-left">
             <div className="font-semibold mb-0.5">{hour}:00</div>
             <div>WO:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_wo`] || ""}</div>
             <div>Standard&nbsp;AQL:&nbsp;&nbsp;&nbsp;&nbsp;{row[`${hour}_aql`] || ""}</div>
