@@ -1,17 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import DropdownDataCustom from "./DropdownDataCustom";
 import useSignOut from "@hooks/useSignOut";
 import useLang from "@hooks/useLang";
 import useAuthorUser from "@hooks/useAuthorUser";
 import { LANGUAGE_LIST } from "@constants/LanguageList";
 import AuthorUserTaskList from "@constants/AuthorUserTaskList";
+import AdminAvatar from "@assets/admin-avatar.jpg";
 
-export default function Navbar() {
+const Navbar = () => {
   const [isSignOutSuccess, setIsSignOutSuccess] = useState(false);
-
-  const onSignOutSuccess = () => setIsSignOutSuccess(true);
 
   const {
     selectedLang, setSelectedLang,
@@ -23,6 +21,8 @@ export default function Navbar() {
     dropdownRef,
     toggleDropdown,
   } = useAuthorUser();
+
+  const onSignOutSuccess = () => setIsSignOutSuccess(true);
 
   const {
     defaultUserName, userName, isAdmin,
@@ -70,7 +70,11 @@ export default function Navbar() {
                     onClick={toggleDropdown}
                     title="Auth User"
                   >
-                    <MdOutlineAdminPanelSettings className="text-2xl" />
+                    <img
+                      src={AdminAvatar}
+                      alt="avatar"
+                      className="rounded-[50%] object-cover"
+                    />
                   </button>
 
                   {
@@ -111,5 +115,7 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
+
+export default Navbar;
