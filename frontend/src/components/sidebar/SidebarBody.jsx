@@ -1,32 +1,14 @@
-import { useState, useEffect } from "react";
 import SidebarBodyApp from "./SidebarBodyApp";
-import { ACTIVE_APP_ID } from "@components/AppIdWrapper";
 import { authAppList, commonAppList } from "@constants/AppList";
+import useSelectedAppIdContext from "@contexts/useSelectedAppIdContext";
 
 const SidebarBody = ({ isExpanded }) => {
-  const [activeAppId, setActiveAppId] = useState(null);
-
   // Hard code to check security
   const defaultUserName = 'admin172185521517500';
   let userName = localStorage.getItem('user_name') || '';
   let isAdmin = localStorage.getItem('is_admin') || '';
 
-  let storedAppId = Number(sessionStorage.getItem(ACTIVE_APP_ID));
-
-  useEffect(() => {
-    if (storedAppId) {
-      setActiveAppId(storedAppId);
-    } else {
-      // Set default app
-      sessionStorage.setItem(ACTIVE_APP_ID, 1);
-      setActiveAppId(1);
-    };
-  }, [storedAppId]);
-
-  const handleOnClickApp = (appId) => {
-    sessionStorage.setItem(ACTIVE_APP_ID, appId);
-    setActiveAppId(appId);
-  };
+  const { activeAppId, handleOnClickApp } = useSelectedAppIdContext();
 
   return (
     <div className="w-full flex-1 min-h-0 overflow-hidden px-1.5 py-1 space-y-1">
