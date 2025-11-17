@@ -5,9 +5,14 @@ import { lazy } from "react";
 
 const MainIPQCData = Loadable(lazy(() => import('@modules/authorizationApp/ipqc/MainIPQCData')));
 const MainCountingData = Loadable(lazy(() => import('@modules/authorizationApp/counting/MainCountingData')));
-const MainUserManangement = Loadable(lazy(() => import('@modules/authorizationApp/userManagement/MainUserManagement')));
+
 const MainAuthorUser = Loadable(lazy(() => import('@modules/authorizationApp/welcomeAuthorUser/MainAuthorUser')));
 const MainUserProfile = Loadable(lazy(() => import('@modules/authorizationApp/userProfile/MainUserProfile')));
+
+// User Management
+const MainUserManangement = Loadable(lazy(() => import('@modules/authorizationApp/userManagement/MainUserManagement')));
+const UserViewDetails = Loadable(lazy(() => import('@modules/authorizationApp/userManagement/action/UserViewDetails')));
+const UserAddNew = Loadable(lazy(() => import('@modules/authorizationApp/userManagement/action/UserAddNew')));
 
 const AdminRoutes = {
   path: '/auth-user',
@@ -39,11 +44,31 @@ const AdminRoutes = {
     },
     {
       path: 'user-management',
-      element: (
-        <AppIdWrapper value={13}>
-          <MainUserManangement />
-        </AppIdWrapper>
-      )
+      children: [
+        {
+          index: true,
+          element: (<AppIdWrapper value={13}>
+            <MainUserManangement />
+          </AppIdWrapper>
+          )
+        },
+        {
+          path: 'add-new-user',
+          element: (
+            <AppIdWrapper value={13}>
+              <UserAddNew />
+            </AppIdWrapper>
+          )
+        },
+        {
+          path: 'user',
+          element: (
+            <AppIdWrapper value={13}>
+              <UserViewDetails />
+            </AppIdWrapper>
+          )
+        },
+      ]
     },
     {
       path: 'user-profile',
