@@ -25,6 +25,9 @@
       "@constants/*": [
         "constants/*"
       ],
+      "@contexts/*": [
+        "contexts/*"
+      ],
       "@hooks/*": [
         "hooks/*"
       ],
