@@ -11,8 +11,8 @@ const MainUserProfile = Loadable(lazy(() => import('@modules/authorizationApp/us
 
 // User Management
 const MainUserManangement = Loadable(lazy(() => import('@modules/authorizationApp/userManagement/MainUserManagement')));
-const UserViewDetails = Loadable(lazy(() => import('@modules/authorizationApp/userManagement/action/UserViewDetails')));
-const UserAddNew = Loadable(lazy(() => import('@modules/authorizationApp/userManagement/action/UserAddNew')));
+const UserViewDetails = Loadable(lazy(() => import('@modules/authorizationApp/userManagement/components/action/viewDetails/UserViewDetails')));
+const UserAddNew = Loadable(lazy(() => import('@modules/authorizationApp/userManagement/components/action/addNew/UserAddNew')));
 
 const AdminRoutes = {
   path: '/auth-user',
@@ -47,9 +47,10 @@ const AdminRoutes = {
       children: [
         {
           index: true,
-          element: (<AppIdWrapper value={13}>
-            <MainUserManangement />
-          </AppIdWrapper>
+          element: (
+            <AppIdWrapper value={13}>
+              <MainUserManangement />
+            </AppIdWrapper>
           )
         },
         {
