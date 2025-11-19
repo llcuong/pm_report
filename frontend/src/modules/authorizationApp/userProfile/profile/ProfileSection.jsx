@@ -1,13 +1,17 @@
 import PopUpCustom from "@components/PopUpCustom";
 import useProfileSection from "./useProfileSection";
+import useConfirmChanges from "@hooks/useConfirmChanges";
 
 const ProfileSection = () => {
   const {
     error,
     isShowPopUp, togglePopUp,
     profile, handleProfileChange, handleUpdateNewProfile,
-    passwordConfirmChange, setPasswordConfirmChange,
   } = useProfileSection();
+
+  const {
+    confirmPassword, setConfirmPassword,
+  } = useConfirmChanges();
 
   return (
     <>
@@ -48,11 +52,12 @@ const ProfileSection = () => {
             <div>
               <label className="block text-sm font-medium text-[#1b9eaf] mb-1">Status</label>
               <input
-                name="isActivated"
+                name="isActive"
                 type="text"
-                value={profile.isActivated ? 'Activated' : 'Inactivated'}
+                value={profile.isActive ? 'Active' : 'Inactive'}
                 onChange={(e) => handleProfileChange(e)}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#1b9eaf] bg-gray-300"
+                className={`w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#1b9eaf] bg-gray-300
+                            ${profile.isActive ? 'text-green-600 border-black' : 'text-yellow-600 border-black'}`}
                 disabled
               />
             </div>
@@ -137,8 +142,9 @@ const ProfileSection = () => {
               inputs={[
                 {
                   label: 'Password',
-                  value: passwordConfirmChange,
-                  onChange: (e) => setPasswordConfirmChange(e.target.value)
+                  value: confirmPassword,
+                  onChange: (e) => setConfirmPassword(e.target.value),
+                  type: 'password',
                 }
               ]}
 
