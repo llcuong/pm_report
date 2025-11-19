@@ -1,5 +1,32 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { IoMdClose } from "react-icons/io";
+
+// Props data
+/**
+ * @typedef {Object} InputTag
+ * @property {string} label
+ * @property {string} value
+ * @property {string} type
+ * @property {(value: React.EventHandler<Event>) => void} onChange
+ */
+
+/**
+ * @typedef {Object} ButtonTag
+ * @property {string} label
+ * @property {string} bg
+ * @property {string} textColor
+ * @property {(value: React.EventHandler<Event> | null) => void} onClick
+ */
+
+/**
+ * @param {Object} props
+ * @param {boolean} props.isOpen
+ * @param {() => void} props.onClose
+ * @param {string} props.title
+ * @param {string} props.description
+ * @param {InputTag[]} props.inputs
+ * @param {ButtonTag[]} props.buttons
+ */
 
 const PopUpCustom = ({
   isOpen,
@@ -43,8 +70,7 @@ const PopUpCustom = ({
           {inputs.slice(0, 3).map((input, index) => (
             <div key={index}>
               <label className="block font-medium mb-1">{input.label}</label>
-              <input
-                type="text"
+              <input type={input.type}
                 value={input.value}
                 onChange={input.onChange}
                 className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
