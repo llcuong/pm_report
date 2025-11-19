@@ -3,12 +3,11 @@ import { useState } from "react";
 const useProfileSection = () => {
   const [isShowPopUp, setIsShowPopUp] = useState(false);
   const [error, setError] = useState('');
-  const [passwordConfirmChange, setPasswordConfirmChange] = useState('');
 
   const [profile, setProfile] = useState({
     id: "18914",
     role: 'Admin',
-    isActivated: true,
+    isActive: true,
 
     name: "Ha Vu",
     email: "onedvu315itech@gmail.com",
@@ -87,7 +86,6 @@ const useProfileSection = () => {
     error,
     isShowPopUp, togglePopUp,
     profile, handleProfileChange, handleUpdateNewProfile,
-    passwordConfirmChange, setPasswordConfirmChange,
   };
 };
 
