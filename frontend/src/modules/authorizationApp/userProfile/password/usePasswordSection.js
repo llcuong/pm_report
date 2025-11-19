@@ -5,7 +5,7 @@ const usePasswordSection = () => {
   const [isShowPopUp, setIsShowPopUp] = useState(false);
 
   const [passwords, setPasswords] = useState({
-    current: "currentPassword",
+    current: "",
     newPass: "",
     confirm: "",
   });
@@ -36,12 +36,20 @@ const usePasswordSection = () => {
     return true;
   };
 
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswords((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+
   // Handle submit password
   const handleUpdateNewPassword = (e) => {
     e.preventDefault();
-
-    // BUG FIX: must CALL the function
     if (!checkPasswordCredentials()) return;
+    setIsShowPopUp(true);
 
     // API call...
     console.log("UPDATED PASSWORD:", passwords);
@@ -50,7 +58,9 @@ const usePasswordSection = () => {
   return {
     error,
     isShowPopUp, togglePopUp,
-    passwords, isShowPassword, handleShowPassword, handleUpdateNewPassword,
+    passwords, isShowPassword,
+    handlePasswordChange,
+    handleShowPassword, handleUpdateNewPassword,
   };
 };
 
