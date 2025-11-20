@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from datetime import datetime
 from .utils import __get_pinhole_raw_data__, __get_pinhole_filtered_data__
 
+
 def get_pinhole_data(request):
     if request.method == 'GET':
         factory = request.GET.get('factory', 'gd')
