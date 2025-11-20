@@ -2,5 +2,5 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path("pinhole-data/", pinhole_data),
+    path("get-pinhole-data/", get_pinhole_data),
 ]

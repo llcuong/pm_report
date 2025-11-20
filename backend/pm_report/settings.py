@@ -73,17 +73,17 @@ SESSION_COOKIE_SAMESITE = "Lax"
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
 # CORS_ALLOWED_ORIGINS = [
-#     "http://172.18.51.108:17501",
-#     "http://172.18.55.215:17501",
-#     "http://localhost:17501",
-#     "http://127.0.0.1:17501",
+#     "http://172.18.51.108:30001",
+#     "http://172.18.55.215:30001",
+#     "http://localhost:30001",
+#     "http://127.0.0.1:30001",
 # ]
 
 # CSRF_TRUSTED_ORIGINS = [
-#     "http://172.18.51.108:17501",
-#     "http://172.18.55.215:17501",
-#     "http://localhost:17501",
-#     "http://127.0.0.1:17501",
+#     "http://172.18.51.108:30001",
+#     "http://172.18.55.215:30001",
+#     "http://localhost:30001",
+#     "http://127.0.0.1:30001",
 # ]
 
 ROOT_URLCONF = 'pm_report.urls'

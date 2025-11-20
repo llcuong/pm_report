@@ -19,7 +19,7 @@ import { format } from "date-fns";
 const getPinholeReportDataAPI = async ({ aql, factory, branch, date, signal }) => {
   try {
     let formattedDate = date ? format(date, 'yyyy-MM-dd') : '';
-    let resOfPinholeReportData = await api.get('/api/pinhole-data/', {
+    let resOfPinholeReportData = await api.get('/api/get-pinhole-data/', {
       params: { aql, factory, branch, date: formattedDate },
       signal
     });

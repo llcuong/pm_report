@@ -1,33 +1,33 @@
 #1 Build backend environments and code images
 
-docker build -f docker/backend/Dockerfile.env -t pm-report-runtime:2025.10.25 --target runtime . --no-cache
-docker build -f docker/backend/Dockerfile -t pm-report-backend:2025.10.27 . --no-cache
+docker build -f docker/backend/Dockerfile.env -t pm-report-runtime:2025-11-13 --target runtime . --no-cache
+docker build -f docker/backend/Dockerfile -t pm-report-backend:2025-11-13 . --no-cache
 
 
 
 #2 Build frontend environments and code images
 
-docker build -f docker/frontend/Dockerfile.env -t pm-report-frontend-env:2025.10.27 --target env . --no-cache
-docker build -f docker/frontend/Dockerfile -t pm-report-frontend:2025.10.27 . --no-cache
+docker build -f docker/frontend/Dockerfile.env -t pm-report-frontend-env:2025-11-13 --target env . --no-cache
+docker build -f docker/frontend/Dockerfile -t pm-report-frontend:2025-11-13 . --no-cache
 
 
 
 #3 Save images to copy to server
 
-docker save pm-report-runtime:2025.10.25 -o pm-report-backend-env-2025-10-25.tar
-docker save pm-report-backend:2025.10.27 -o pm-report-backend-2025-10-27.tar
+docker save pm-report-runtime:2025-11-13 -o pm-report-backend-env-2025-11-13.tar
+docker save pm-report-backend:2025-11-13 -o pm-report-backend-2025-11-13.tar
 
-docker image save -o pm-report-frontend-env_2025-10-25.tar pm-report-frontend-env:2025.10.25
-docker image save -o pm-report-frontend-2025-10-27.tar pm-report-frontend:2025.10.27
+docker image save -o pm-report-frontend-env-2025-11-13.tar pm-report-frontend-env:2025-11-13
+docker image save -o pm-report-frontend-2025-11-13.tar pm-report-frontend:2025-11-13
 
 
 
 #4 Load images after copy to server
 
-docker load -i pm-report-backend-env-2025-10-25.tar
-docker load -i pm-report-backend-2025-10-25.tar
-docker load -i pm-report-frontend-env-2025-10-25.tar
-docker load -i pm-report-frontend-2025-10-25.tar
+docker load -i pm-report-backend-env-2025-11-13.tar
+docker load -i pm-report-backend-2025-11-13.tar
+docker load -i pm-report-frontend-env-2025-11-13.tar
+docker load -i pm-report-frontend-2025-11-13.tar
 
 
 
@@ -48,3 +48,6 @@ docker compose down -d
 docker logs --tail 10 pm-report-backend
 docker logs --tail 10 pm-report-frontend
 docker network create pm_net
+
+
+docker rmi -f fdff107d8b91 e165c27ce8da b775fed978b2  2d41b3c563d6

@@ -10,6 +10,7 @@ def __get_gmt_7_hour__():
     except Exception:
         return datetime.utcnow() + timedelta(hours=7)
 
+
 def __get_pinhole_raw_data__(factory, branch, date):
     mes_db = __get_factory_mes_database__(factory)
 
@@ -26,6 +27,7 @@ def __get_pinhole_raw_data__(factory, branch, date):
     sql = __get_pinhole_data__query(branch, date, hour)
     rows = mes_db.select_sql_dict(sql)
     return rows
+
 
 def __get_pinhole_filtered_data__(raw_data, aql):
     aql_list = ['All', *sorted({float(r.get("AQL", "").strip()) for r in raw_data if r.get("AQL", "").strip()})]
