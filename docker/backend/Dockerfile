@@ -1,4 +1,4 @@
-FROM pm-report-runtime:2025-11-13
+FROM pm-report-runtime:2025-11-22
 ENV PATH="/opt/venv/bin:$PATH"
 WORKDIR /app
 
