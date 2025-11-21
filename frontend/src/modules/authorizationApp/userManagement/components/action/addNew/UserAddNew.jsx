@@ -36,6 +36,17 @@ const UserAddNew = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
           <div className="flex flex-col gap-4">
             <div>
+              {requiredLabel("User ID")}
+              <input
+                type="text"
+                name="userId"
+                placeholder="User ID"
+                value={form.userId}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-lg"
+              />
+            </div>
+            <div>
               {requiredLabel("Full Name")}
               <input
                 type="text"
@@ -46,6 +57,8 @@ const UserAddNew = () => {
                 className="w-full p-2 border rounded-lg"
               />
             </div>
+          </div>
+          <div className="flex flex-col gap-4">
             <div>
               <label className="font-medium text-[#1b9eaf]">Email</label>
               <input
@@ -57,8 +70,6 @@ const UserAddNew = () => {
                 className="w-full p-2 border rounded-lg"
               />
             </div>
-          </div>
-          <div className="flex flex-col gap-4">
             <div>
               <label className="font-medium text-[#1b9eaf]">Phone Number</label>
               <input
