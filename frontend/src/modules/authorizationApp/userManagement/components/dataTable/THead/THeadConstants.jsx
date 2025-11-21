@@ -5,7 +5,7 @@ import { SiTicktick } from "react-icons/si";
 export const THeadAttributeConstants = [
   {
     id: 1,
-    label: "ID",
+    label: "User ID",
     attribute: "id",
     requiredSort: true,
     width: 10,
