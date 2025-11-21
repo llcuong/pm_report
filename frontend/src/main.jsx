@@ -1,0 +1,10 @@
+import App from './App';
+import './i18next';
+import { createRoot } from 'react-dom/client';
+import '../global-styles.css';
+
+const root = createRoot(document.getElementById('root'));
+
+root.render(
+  <App />
+);

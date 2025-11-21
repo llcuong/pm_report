@@ -1,6 +1,20 @@
+#API
+npm install axios
+
+#Bundler
+npm install vite @vitejs/plugin-React
+
+#Date
+npm install react-datepicker date-fns
+
+#Linting
+npm install eslint eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-react-refresh eslint-plugin-unused-imports
+
+#React Framework
 npm install react react-dom
-npm install vite
-npm install @vitejs/plugin-react
-npm install react-datepicker
-npm install date-fns
-npm install react-i18next i18next
+
+#Router
+npm install react-router-dom
+
+#Style
+npm install tailwindcss @tailwindcss/vite

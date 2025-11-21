@@ -1,60 +1,31 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import { fileURLToPath, URL } from 'node:url'
-
-function methodGuard(allowed) {
-    return (proxy) => {
-        proxy.on('proxyReq', (proxyReq, req, res) => {
-            if (req.method !== allowed) {
-                res.statusCode = 405
-                res.end(`Method Not Allowed: expected ${allowed}, got ${req.method}`)
-            }
-        })
-    }
-}
-
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import path from 'node:path';
 
 export default defineConfig({
-    plugins: [react(), tailwindcss()],
-    resolve: {
-        alias: {
-            '@assets': fileURLToPath(new URL('./assets', import.meta.url)),
-            '@apps': fileURLToPath(new URL('./src/apps', import.meta.url)),
-            '@bases': fileURLToPath(new URL('./src/bases', import.meta.url)),
-        },
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      '@assets': path.resolve(__dirname, 'src/assets'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@configs': path.resolve(__dirname, 'src/configs'),
+      '@constants': path.resolve(__dirname, 'src/constants'),
+      '@contexts': path.resolve(__dirname, 'src/contexts'),
+      '@hooks': path.resolve(__dirname, 'src/hooks'),
+      '@layouts': path.resolve(__dirname, 'src/layouts'),
+      '@locales': path.resolve(__dirname, 'src/locales'),
+      '@modules': path.resolve(__dirname, 'src/modules'),
+      '@routes': path.resolve(__dirname, 'src/routes'),
+      '@services': path.resolve(__dirname, 'src/services'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
     },
-    server: {
-        host: true,
-        port: 17501,
-        proxy: {
-            '/get': {
-                target: 'http://172.18.55.215:17500',
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/get/, ''),
-                configure: methodGuard('GET'),
-            },
-            '/post': {
-                target: 'http://172.18.55.215:17500',
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/post/, ''),
-                configure: methodGuard('POST'),
-            },
-            '/put': {
-                target: 'http://172.18.55.215:17500',
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/put/, ''),
-                configure: methodGuard('PUT'),
-            },
-            '/delete': {
-                target: 'http://172.18.55.215:17500',
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/delete/, ''),
-                configure: methodGuard('DELETE'),
-            },
-        },
-    },
-    build: {
-        outDir: 'dist'
-    },
-})
+  },
+  server: {
+    host: true,
+    port: 30001,
+  },
+  build: {
+    outDir: 'dist'
+  },
+});

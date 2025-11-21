@@ -1,19 +1,19 @@
 services:
   backend:
-    image: pm-report-backend:2025.10.25
+    image: pm-report-backend:2025-11-13
     container_name: pm-report-backend
-    ports: ["17500:17500"]
+    ports: ["30000:30000"]
     networks:
       pm_net:
         aliases:
           - pm-report-backend
 
   frontend:
-    image: pm-report-frontend:2025.10.25
+    image: pm-report-frontend:2025-11-13
     container_name: pm-report-frontend
     environment:
-      - BACKEND_URL=http://pm-report-backend:17500
-    ports: ["17501:17501"]
+      - BACKEND_URL=http://pm-report-backend:30000
+    ports: ["30001:30001"]
     networks:
       pm_net:
         aliases:

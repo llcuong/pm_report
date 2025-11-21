@@ -1,0 +1,57 @@
+{
+  "navbar": {
+    "version": "version",
+    "profile": "Profile"
+  },
+  "sidebar": {
+    "menu": "Menu",
+    "pinholeReport": "Pinhole Report",
+    "ipqcData": "IPQC Data",
+    "countingData": "Counting Data",
+    "userManagement": "User Manangement",
+    "signIn": "Sign In",
+    "signOut": "Sign Out"
+  },
+  "outlet": {
+    "pinholeReport": {
+      "header": {
+        "pinholeTitle": "Pinhole Inspectation Data",
+        "factory": "Factory",
+        "branch": "Branch"
+      },
+      "body": {
+        "machine": "Machine",
+        "line": "Line",
+        "workOrder": "Work Order",
+        "aql": "AQL",
+        "place": "Place",
+        "noData": "No data"
+      }
+    },
+    "admin": {}
+  },
+  "signIn": {
+    "signInTitle": "Sign in to PM Report",
+    "userId": "User ID",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signInButton": "Sign In",
+    "backToReport": "Back to report"
+  },
+  "toastify": {
+    "success": {
+      "signInSuccessfully": "Sign in successfully.",
+      "signOutSuccessfully": "Sign out successfully."
+    },
+    "error": {
+      "emptyField": "Missing field user no or password!",
+      "invalidInput": "Invalid input: user id or password!",
+      "signInFailed": "Sign in failed!"
+    }
+  },
+  "error": {
+    "internalServerError": "Internal Server Error!"
+  },
+  "language": "Language"
+}

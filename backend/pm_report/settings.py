@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-n)%q0yrd9hcqn9r7b8hw3j(^^uet=-5ninl)z&k!$=fz)zg%c@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'pm-report-backend', '127.0.0.1', '*']
+ALLOWED_HOSTS = ['localhost', 'pm-report-backend', '127.0.0.1', '*', "172.18.55.215"]
 
 
 # Application definition
@@ -45,28 +45,46 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+]
+
 MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:17501",
-    "http://127.0.0.1:17501",
-]
+CSRF_COOKIE_NAME = "csrftoken"
+SESSION_COOKIE_NAME = "sessionid"
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:17501",
-    "http://127.0.0.1:17501",
-]
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SAMESITE = "Lax"
+# CSRF_COOKIE_SAMESITE = "None"
+# SESSION_COOKIE_SAMESITE = "None"
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://172.18.51.108:30001",
+#     "http://172.18.55.215:30001",
+#     "http://localhost:30001",
+#     "http://127.0.0.1:30001",
+# ]
+
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://172.18.51.108:30001",
+#     "http://172.18.55.215:30001",
+#     "http://localhost:30001",
+#     "http://127.0.0.1:30001",
+# ]
 
 ROOT_URLCONF = 'pm_report.urls'
 
@@ -91,12 +109,20 @@ WSGI_APPLICATION = 'pm_report.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.getenv('SQLITE_PATH', str(BASE_DIR / 'db.sqlite3')),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'mssql',
+        'NAME': 'VN_ANALYSIS',
+        'USER': 'report',
+        'PASSWORD': 'report#123',
+        'HOST': '10.13.100.101',
+        'PORT': '1433',
+
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+        }
+    }
+}
 
 
 # Password validation
