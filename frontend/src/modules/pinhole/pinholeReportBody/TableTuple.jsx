@@ -1,5 +1,6 @@
-import { HOUR_LIST } from "../PinholeConstantData";
+import { HOUR_LIST, HOUR_CLASS_CONFIG } from "../PinholeConstantData";
 import TableCell from "./TableCell";
+import { Fragment } from "react";
 
 const TableTuple = ({ row }) => {
   return (
@@ -16,9 +17,19 @@ const TableTuple = ({ row }) => {
       <td className="px-3 py-2 border-b border-gray-100 font-medium">
         {row.AQL}
       </td>
-      {HOUR_LIST.map(hour => (
-        <TableCell key={hour} hour={hour} row={row} />
-      ))}
+      {HOUR_CLASS_CONFIG.map(cls => (
+          <Fragment key={cls.id}>
+            {cls.hours.map(hour => (
+              <TableCell key={hour} hour={hour} row={row} />
+            ))}
+
+            <td
+              className="px-3 py-2 border-b border-gray-200 text-center bg-gray-100 font-semibold"
+            >
+              {row[`${cls.id}_sum`] ?? ""}
+            </td>
+          </Fragment>
+        ))}
     </tr>
   );
 };

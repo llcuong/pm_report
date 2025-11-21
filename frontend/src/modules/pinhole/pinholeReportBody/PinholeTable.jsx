@@ -1,8 +1,9 @@
 import { useContext, useMemo } from "react";
-import { HOUR_LIST } from "../PinholeConstantData";
+import { HOUR_LIST, HOUR_CLASS_CONFIG } from "../PinholeConstantData";
 import TableTuple from "./TableTuple";
 import usePinholeDataContext from "../contexts/usePinholeDataContext";
 import { useTranslation } from "react-i18next";
+import { Fragment } from "react";
 
 const PinholeTable = () => {
   const {
@@ -27,12 +28,28 @@ const PinholeTable = () => {
                 </th>
               ))
             }
-            {HOUR_LIST.map(hour => (
-              <th key={hour}
-                className="px-2 py-2 font-semibold border-b border-gray-200 text-center bg-gray-200">
-                {hour}
-              </th>
+            {HOUR_CLASS_CONFIG.map(cls => (
+              <Fragment key={cls.id}>
+                {cls.hours.map(hour => (
+                  <th
+                    key={hour}
+                    className="px-2 py-2 font-semibold border-b border-gray-200 text-center bg-gray-200"
+                  >
+                    {hour}
+                  </th>
+                ))}
+
+                <th
+                  key={`${cls.id}_sum`}
+                  className="px-3 py-2 font-semibold border-b border-gray-200 text-center bg-gray-300"
+                >
+                  {cls.id === "class_1" && <>早班<br/>總計</>}
+                  {cls.id === "class_2" && <>中班<br/>總計</>}
+                  {cls.id === "class_3" && <>晚班<br/>總計</>}
+                </th>
+              </Fragment>
             ))}
+
           </tr>
         </thead>
         <tbody>
@@ -43,7 +60,7 @@ const PinholeTable = () => {
           {(!viewData.rows || viewData.rows.length === 0) && (
             <tr>
               <td
-                colSpan={4 + HOUR_LIST.length}
+                colSpan={4 + HOUR_LIST.length + 3}
                 className="px-3 py-6 text-center text-gray-500"
               >
                 No data
