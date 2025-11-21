@@ -11,6 +11,7 @@ import { ACTIONS } from "./actionTypes";
 import useButtonDisabled from "./hooks/useButtonDisabled";
 
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const UserManagementHeader = () => {
   const navigate = useNavigate();
@@ -24,10 +25,12 @@ const UserManagementHeader = () => {
   // Handle clicked action
   const { confirmAction, confirmPassword, setConfirmPassword, onSearch, onSubmit } = useHeaderActions({ action, closePopup: close });
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="relative w-full flex flex-wrap justify-between">
-        <h2 className="text-2xl font-bold text-[#1b9eaf]">Authorized User</h2>
+        <h2 className="text-2xl font-bold text-[#1b9eaf]">{t('outlet.authUser.userManagement.header.authorizedUser')}</h2>
         <div className="relative flex gap-4 mt-3 sm:mt-0">
           <div className="relative">
             <form onSubmit={onSubmit}>
@@ -37,7 +40,7 @@ const UserManagementHeader = () => {
               <input
                 type="text"
                 name="search"
-                placeholder="Search user by id or name..."
+                placeholder={t('outlet.authUser.userManagement.header.searchPlaceholder')}
                 onChange={(e) => onSearch(e.target.value)}
                 className="border border-gray-300 rounded-lg pl-10 pr-3 py-2 h-10 w-80 focus:ring-1 focus:ring-[#1b9eaf] focus:outline-none"
               />
@@ -49,7 +52,7 @@ const UserManagementHeader = () => {
             className="bg-green-500 hover:bg-green-600 text-white font-medium cursor-pointer flex items-center gap-2 h-10 px-4 rounded-lg transition"
           >
             <FaPlus className="text-sm" />
-            <span>Add new user</span>
+            <span>{t('outlet.authUser.userManagement.header.addNewUser')}</span>
           </button>
         </div>
       </div>
@@ -63,7 +66,7 @@ const UserManagementHeader = () => {
               : 'cursor-pointer text-green-600 hover:bg-green-600 hover:text-white'}`}
         >
           <SiTicktick className="text-sm" />
-          <span>Activate</span>
+          <span>{t('outlet.authUser.userManagement.header.activate')}</span>
         </button>
         <button type="button" name="deactivate" disabled={isDeactivateDisabled}
           onClick={() => open(ACTIONS.DEACTIVATE)}
@@ -72,7 +75,7 @@ const UserManagementHeader = () => {
               ? 'bg-gray-300 cursor-not-allowed text-gray-500 hover:bg-gray-300 hover:text-gray-500'
               : 'cursor-pointer text-yellow-600 hover:bg-yellow-600 hover:text-white'}`}>
           <CgRemoveR className="text-sm" />
-          <span>Deactivate</span>
+          <span>{t('outlet.authUser.userManagement.header.deactivate')}</span>
         </button>
         <button type="button" name="delete" disabled={isDeleteDisabled}
           onClick={() => open(ACTIONS.DELETE)}
@@ -81,7 +84,7 @@ const UserManagementHeader = () => {
               ? 'bg-gray-300 cursor-not-allowed text-gray-500 hover:bg-gray-300 hover:text-gray-500'
               : 'cursor-pointer text-red-600 hover:bg-red-600 hover:text-white'}`}>
           <RiDeleteBinLine className="text-sm" />
-          <span>Delete permanently</span>
+          <span>{t('outlet.authUser.userManagement.header.delete')}</span>
         </button>
       </div>
 
@@ -92,7 +95,7 @@ const UserManagementHeader = () => {
           onClose={close}
           inputs={[
             {
-              label: 'Password',
+              label: t('signIn.password'),
               value: confirmPassword,
               onChange: (e) => setConfirmPassword(e.target.value),
               type: 'password',
@@ -100,8 +103,8 @@ const UserManagementHeader = () => {
           ]}
           buttons={[
             {
-              label: "Cancel",
-              bg: "#ff3a3a",
+              label: t('outlet.authUser.userManagement.view.cancel'),
+              bg: "#4b5563",
               textColor: "#fff",
               onClick: () => {
                 setConfirmPassword('');
@@ -110,8 +113,8 @@ const UserManagementHeader = () => {
             },
             {
               label: button.label,
-              bg: "#16a34a",
-              textColor: button.color,
+              bg: button.color,
+              textColor: "#fff",
               onClick: confirmAction,
             },
           ]}

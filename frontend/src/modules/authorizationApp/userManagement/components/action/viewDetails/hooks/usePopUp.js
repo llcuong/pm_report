@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { ACTIONS } from "../actionTypes";
+import { useTranslation } from "react-i18next";
 
 const usePopUp = () => {
   const [action, setAction] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+
+  const { t } = useTranslation();
 
   const open = act => {
     setAction(act);
@@ -13,27 +16,27 @@ const usePopUp = () => {
   const close = () => setIsOpen(false);
 
   const titles = {
-    [ACTIONS.UPDATE]: "Update user information",
-    [ACTIONS.DELETE]: "Delete user account",
-    [ACTIONS.RESET_PASSWORD]: "Reset default password",
-    [ACTIONS.ACTIVATE]: "Activate user",
-    [ACTIONS.DEACTIVATE]: "Deactivate user",
+    [ACTIONS.UPDATE]: t('outlet.authUser.userManagement.popup.title.update'),
+    [ACTIONS.DELETE]: t('outlet.authUser.userManagement.popup.title.delete'),
+    [ACTIONS.RESET_PASSWORD]: t('outlet.authUser.userManagement.popup.title.resetDefaultPassword'),
+    [ACTIONS.ACTIVATE]: t('outlet.authUser.userManagement.popup.title.activate'),
+    [ACTIONS.DEACTIVATE]: t('outlet.authUser.userManagement.popup.title.deactivate'),
   };
 
   const descriptions = {
-    [ACTIONS.UPDATE]: "This will update user information. Please enter password to confirm changes.",
-    [ACTIONS.DELETE]: "This will permanently delete the user. Please enter password to confirm changes.",
-    [ACTIONS.RESET_PASSWORD]: "This will reset the password. Please enter password to confirm changes.",
-    [ACTIONS.ACTIVATE]: "This will activate the account. Please enter password to confirm changes.",
-    [ACTIONS.DEACTIVATE]: "This will deactivate the account. Please enter password to confirm changes.",
+    [ACTIONS.UPDATE]: t('outlet.authUser.userManagement.popup.description.update'),
+    [ACTIONS.DELETE]: t('outlet.authUser.userManagement.popup.description.delete'),
+    [ACTIONS.RESET_PASSWORD]: t('outlet.authUser.userManagement.popup.description.resetDefaultPassword'),
+    [ACTIONS.ACTIVATE]: t('outlet.authUser.userManagement.popup.description.activate'),
+    [ACTIONS.DEACTIVATE]: t('outlet.authUser.userManagement.popup.description.deactivate'),
   };
 
   const buttons = {
-    [ACTIONS.UPDATE]: { label: "Update", color: "text-green-500" },
-    [ACTIONS.DELETE]: { label: "Delete", color: "text-red-500" },
-    [ACTIONS.RESET_PASSWORD]: { label: "Reset Password", color: "text-indigo-800" },
-    [ACTIONS.ACTIVATE]: { label: "Activate", color: "text-green-600" },
-    [ACTIONS.DEACTIVATE]: { label: "Deactivate", color: "text-yellow-600" },
+    [ACTIONS.UPDATE]: { label: t('popup.buttons.update'), color: "#16a34a" },
+    [ACTIONS.DELETE]: { label: t('popup.buttons.delete'), color: "#ef4444" },
+    [ACTIONS.RESET_PASSWORD]: { label: t('popup.buttons.resetDefaultPassword'), color: "#3730a3" },
+    [ACTIONS.ACTIVATE]: { label: t('popup.buttons.activate'), color: "#16a34a" },
+    [ACTIONS.DEACTIVATE]: { label: t('popup.buttons.deactivate'), color: "#ca8a04" },
   };
 
   return {

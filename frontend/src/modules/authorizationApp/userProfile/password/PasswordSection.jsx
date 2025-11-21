@@ -1,5 +1,6 @@
 import PopUpCustom from "@components/PopUpCustom";
 import usePasswordSection from "./usePasswordSection";
+import { useTranslation } from "react-i18next";
 
 const PasswordSection = () => {
   const {
@@ -10,20 +11,22 @@ const PasswordSection = () => {
     handleShowPassword, handleUpdateNewPassword,
   } = usePasswordSection();
 
+  const { t } = useTranslation();
+
   return (
     <>
       <form onSubmit={handleUpdateNewPassword}>
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-[#1b9eaf] mb-4">Password Section</h2>
+          <h2 className="text-2xl font-bold text-[#1b9eaf] mb-4">{t('outlet.authUser.profile.dataFields.profileInformation')}</h2>
           <button type="submit"
             className="px-4 py-2 bg-green-600 text-white rounded-lg cursor-pointer border border-[#1b9eaf]
           hover:bg-[#aececf] hover:text-black transition duration-200">
-            Change new password
+            {t('outlet.authUser.profile.dataFields.changeNewPassword')}
           </button>
         </div>
         <div className="w-full space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[#1b9eaf] mb-1">Current Password</label>
+            <label className="block text-sm font-medium text-[#1b9eaf] mb-1">{t('outlet.authUser.profile.dataFields.currentPassword')}</label>
             <input
               name="current"
               type={`${isShowPassword ? 'text' : 'password'}`}
@@ -34,7 +37,7 @@ const PasswordSection = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#1b9eaf] mb-1">New Password</label>
+            <label className="block text-sm font-medium text-[#1b9eaf] mb-1">{t('outlet.authUser.profile.dataFields.newPassword')}</label>
             <input
               name="newPass"
               type="password"
@@ -45,7 +48,7 @@ const PasswordSection = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#1b9eaf] mb-1">Confirm Password</label>
+            <label className="block text-sm font-medium text-[#1b9eaf] mb-1">{t('outlet.authUser.profile.dataFields.confirmPassword')}</label>
             <input
               name="confirm"
               type="password"
@@ -62,18 +65,18 @@ const PasswordSection = () => {
         isShowPopUp && (
           <div>
             <PopUpCustom isOpen={isShowPopUp}
-              title='Change Password'
-              description='This will change your password. Are you sure to secure your password ?'
+              title={t('popup.title.changePassword')}
+              description={t('popup.description.changePassword')}
               onClose={togglePopUp}
               buttons={[
                 {
-                  label: "Cancel",
+                  label: t('popup.buttons.cancel'),
                   bg: "#ff3a3a",
                   textColor: "#fff",
                   onClick: togglePopUp,
                 },
                 {
-                  label: "Save",
+                  label: t('popup.buttons.save'),
                   bg: "#16a34a",
                   textColor: "#fff",
                   onClick: (e) => handleUpdateNewPassword(e),

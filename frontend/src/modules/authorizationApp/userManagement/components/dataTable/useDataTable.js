@@ -33,9 +33,9 @@ const useDataTable = ({
     // Special filter for Status
     if (attribute === "status") {
       if (value === "active")
-        listToSort = userList.filter(u => u.accountStatus === "Active");
+        listToSort = userList.filter(u => u.accountStatus === "active");
       else if (value === "inactive")
-        listToSort = userList.filter(u => u.accountStatus !== "Active");
+        listToSort = userList.filter(u => u.accountStatus !== "active");
       else
         listToSort = [...userList];
 

@@ -1,6 +1,7 @@
 import PopUpCustom from "@components/PopUpCustom";
 import useProfileSection from "./useProfileSection";
 import useConfirmChanges from "@hooks/useConfirmChanges";
+import { useTranslation } from "react-i18next";
 
 const ProfileSection = () => {
   const {
@@ -13,22 +14,24 @@ const ProfileSection = () => {
     confirmPassword, setConfirmPassword,
   } = useConfirmChanges();
 
+  const { t } = useTranslation();
+
   return (
     <>
       <form onSubmit={handleUpdateNewProfile}>
         <div className="mb-6">
-          <h2 className="text-2xl text-[#1b9eaf] font-bold mb-4">Profile Information</h2>
+          <h2 className="text-2xl text-[#1b9eaf] font-bold mb-4">{t('outlet.authUser.profile.dataFields.passwordSection')}</h2>
           <button type="submit"
             className="px-4 py-2 bg-green-600 text-white rounded-lg cursor-pointer border border-[#1b9eaf]
                            hover:bg-[#aececf] hover:text-black transition duration-200">
-            Update profile
+            {t('outlet.authUser.profile.dataFields.updateProfile')}
           </button>
         </div>
 
         <div className="flex gap-4">
           <div className="md:w-1/3 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">ID</label>
+              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">{t('outlet.authUser.userManagement.body.userId')}</label>
               <input
                 name="id"
                 type="text"
@@ -39,33 +42,7 @@ const ProfileSection = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">Role</label>
-              <input
-                name="role"
-                type="text"
-                value={profile.role}
-                onChange={(e) => handleProfileChange(e)}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#1b9eaf] bg-gray-300"
-                disabled
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">Status</label>
-              <input
-                name="isActive"
-                type="text"
-                value={profile.isActive ? 'Active' : 'Inactive'}
-                onChange={(e) => handleProfileChange(e)}
-                className={`w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#1b9eaf] bg-gray-300
-                            ${profile.isActive ? 'text-green-600 border-black' : 'text-yellow-600 border-black'}`}
-                disabled
-              />
-            </div>
-          </div>
-
-          <div className="md:w-1/3 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">Full Name</label>
+              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">{t('outlet.authUser.userManagement.body.fullName')}</label>
               <input
                 name="name"
                 type="text"
@@ -74,8 +51,11 @@ const ProfileSection = () => {
                 className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#1b9eaf]"
               />
             </div>
+          </div>
+
+          <div className="md:w-1/3 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">Email</label>
+              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">{t('outlet.authUser.userManagement.body.email')}</label>
               <input
                 name="email"
                 type="email"
@@ -85,7 +65,7 @@ const ProfileSection = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">Phone</label>
+              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">{t('outlet.authUser.userManagement.body.phoneNumber')}</label>
               <input
                 name="phone"
                 type="text"
@@ -99,7 +79,18 @@ const ProfileSection = () => {
 
           <div className="md:w-1/3 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">Factory</label>
+              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">{t('outlet.authUser.userManagement.body.role')}</label>
+              <input
+                name="role"
+                type="text"
+                value={profile.role}
+                onChange={(e) => handleProfileChange(e)}
+                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#1b9eaf] bg-gray-300"
+                disabled
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">{t('outlet.authUser.userManagement.body.factory')}</label>
               <input
                 name="factory"
                 type="text"
@@ -109,23 +100,15 @@ const ProfileSection = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">Ward</label>
+              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">{t('outlet.authUser.userManagement.body.status')}</label>
               <input
-                name="ward"
+                name="isActive"
                 type="text"
-                value={profile.ward}
+                value={profile.isActive ? 'Active' : 'Inactive'}
                 onChange={(e) => handleProfileChange(e)}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#1b9eaf]"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#1b9eaf] mb-1">Province</label>
-              <input
-                name="province"
-                type="text"
-                value={profile.province}
-                onChange={(e) => handleProfileChange(e)}
-                className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#1b9eaf]"
+                className={`w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#1b9eaf] bg-gray-300
+                            ${profile.isActive ? 'text-green-600 border-black' : 'text-yellow-600 border-black'}`}
+                disabled
               />
             </div>
           </div>
@@ -136,12 +119,12 @@ const ProfileSection = () => {
         isShowPopUp && (
           <div>
             <PopUpCustom isOpen={isShowPopUp}
-              title='Update profile'
-              description='This will update the changes of your profile. Please enter your password to confirm changes'
+              title={t('outlet.authUser.profile.popup.title')}
+              description={t('outlet.authUser.profile.popup.description')}
               onClose={togglePopUp}
               inputs={[
                 {
-                  label: 'Password',
+                  label: t('signIn.password'),
                   value: confirmPassword,
                   onChange: (e) => setConfirmPassword(e.target.value),
                   type: 'password',
@@ -150,13 +133,13 @@ const ProfileSection = () => {
 
               buttons={[
                 {
-                  label: "Cancel",
+                  label: t('popup.buttons.cancel'),
                   bg: "#ff3a3a",
                   textColor: "#fff",
                   onClick: togglePopUp,
                 },
                 {
-                  label: "Save",
+                  label: t('popup.buttons.save'),
                   bg: "#16a34a",
                   textColor: "#fff",
                   onClick: (e) => handleUpdateNewProfile(e),

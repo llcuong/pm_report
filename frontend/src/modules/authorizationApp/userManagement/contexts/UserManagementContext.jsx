@@ -8,7 +8,7 @@ import { TestData } from "../TestData";
  * @property {string | null} avatar
  * @property {string | null} fullName
  * @property {string | null} email
- * @property {string | null} department
+ * @property {string | null} factory
  * @property {string | null} accountStatus
  * @property {string | null} role
  */

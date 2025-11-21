@@ -11,6 +11,7 @@ import usePopUp from "./hooks/usePopUp";
 import useUserActions from "./hooks/useUserActions";
 
 import { ACTIONS } from "./actionTypes";
+import { useTranslation } from "react-i18next";
 
 const UserViewDetails = () => {
   // Handle form behavior
@@ -22,47 +23,49 @@ const UserViewDetails = () => {
   // Handle clicked action
   const { confirmAction, confirmPassword, setConfirmPassword } = useUserActions({ form, action, closePopup: close });
 
+  const { t } = useTranslation();
+
   return (
     <div className="w-1/2 mt-5 h-220 mx-auto bg-white shadow-md p-6 rounded-xl flex flex-col">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-[#1b9eaf]">View Details</h2>
+        <h2 className="text-2xl font-bold text-[#1b9eaf]">{t('outlet.authUser.userManagement.body.viewDetails')}</h2>
         <div className="flex gap-4">
           {isEditMode ? (
             <>
               <button
                 type="button"
                 onClick={() => open(ACTIONS.UPDATE)}
-                className="py-2 px-4 rounded-lg text-white bg-green-600 hover:bg-green-800"
+                className="py-2 px-4 rounded-lg text-white bg-green-600 hover:bg-green-800 transition-colors duration-200 cursor-pointer"
               >
-                Update
+                {t('outlet.authUser.userManagement.view.update')}
               </button>
               <button
                 type="button"
                 onClick={() => {
                   setIsEditMode(false);
                 }}
-                className="py-2 px-4 rounded-lg text-white bg-gray-400 hover:bg-gray-600"
+                className="py-2 px-4 rounded-lg text-white bg-gray-400 hover:bg-gray-600 transition-colors duration-200 cursor-pointer"
               >
-                Cancel
+                {t('outlet.authUser.userManagement.view.cancel')}
               </button>
             </>
           ) : (
             <button
               type="button"
               onClick={() => setIsEditMode(true)}
-              className="flex gap-2 items-center py-2 px-4 rounded-lg text-white bg-blue-600 hover:bg-blue-800"
+              className="flex gap-2 items-center py-2 px-4 rounded-lg text-white bg-blue-600 hover:bg-blue-800 transition-colors duration-200 cursor-pointer"
             >
               <FiEdit />
-              Edit
+              {t('outlet.authUser.userManagement.view.edit')}
             </button>
           )}
           <button
             type="button"
             onClick={() => open(ACTIONS.DELETE)}
-            className="flex gap-2 items-center py-2 px-4 rounded-lg text-white bg-red-600 hover:bg-red-800"
+            className="flex gap-2 items-center py-2 px-4 rounded-lg text-white bg-red-600 hover:bg-red-800 transition-colors duration-200 cursor-pointer"
           >
             <RiDeleteBinLine />
-            Delete
+            {t('outlet.authUser.userManagement.header.delete')}
           </button>
         </div>
       </div>
@@ -71,34 +74,34 @@ const UserViewDetails = () => {
         <button
           type="button"
           onClick={() => open(ACTIONS.RESET_PASSWORD)}
-          className="py-2 px-4 border rounded-lg flex gap-2 items-center text-indigo-800 hover:bg-indigo-800 hover:text-white"
+          className="py-2 px-4 border rounded-lg flex gap-2 items-center text-indigo-800 hover:bg-indigo-800 hover:text-white transition-colors duration-200 cursor-pointer"
         >
           <RiLockPasswordLine />
-          Set default password
+          {t('outlet.authUser.userManagement.view.setDefaultPassword')}
         </button>
         <button
           type="button"
           onClick={() =>
-            open(form.accountStatus === "Active" ? ACTIONS.DEACTIVATE : ACTIONS.ACTIVATE)
+            open(form.accountStatus === "active" ? ACTIONS.DEACTIVATE : ACTIONS.ACTIVATE)
           }
-          className={`py-2 px-4 border rounded-lg flex gap-2 items-center 
-            ${form.accountStatus === "Active"
+          className={`py-2 px-4 border rounded-lg flex gap-2 items-center transition-colors duration-200 cursor-pointer
+            ${form.accountStatus === "active"
               ? "text-yellow-600 hover:bg-yellow-600 hover:text-white"
               : "text-green-600 hover:bg-green-600 hover:text-white"
             }`}
         >
-          {form.accountStatus === "Active" ? <CgRemoveR /> : <SiTicktick />}
-          {form.accountStatus === "Active" ? "Deactivate" : "Activate"}
+          {form.accountStatus === "active" ? <CgRemoveR /> : <SiTicktick />}
+          {t(`outlet.authUser.userManagement.header.${form.accountStatus === "active" ? "deactivate" : "activate"}`)}
         </button>
       </div>
 
       <div className="h-0.5 bg-gray-400 mb-6" />
 
-      <h3 className="text-xl font-semibold text-[#1b9eaf] mb-6">Personal Information</h3>
+      <h3 className="text-xl font-semibold text-[#1b9eaf] mb-6">{t('outlet.authUser.userManagement.add.personalInformation')}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
         <div className="flex flex-col gap-4">
           <div>
-            <label className="font-medium text-[#1b9eaf]">User ID</label>
+            <label className="font-medium text-[#1b9eaf]">{t('outlet.authUser.userManagement.body.userId')}</label>
             <input
               disabled
               value={form.id}
@@ -108,7 +111,7 @@ const UserViewDetails = () => {
             />
           </div>
           <div>
-            <label className="font-medium text-[#1b9eaf]">Full Name</label>
+            <label className="font-medium text-[#1b9eaf]">{t('outlet.authUser.userManagement.body.fullName')}</label>
             <input
               disabled={!isEditMode}
               value={form.fullName}
@@ -120,7 +123,7 @@ const UserViewDetails = () => {
         </div>
         <div className="flex flex-col gap-4">
           <div>
-            <label className="font-medium text-[#1b9eaf]">Email</label>
+            <label className="font-medium text-[#1b9eaf]">{t('outlet.authUser.userManagement.body.email')}</label>
             <input
               disabled={!isEditMode}
               name="email"
@@ -130,7 +133,7 @@ const UserViewDetails = () => {
             />
           </div>
           <div>
-            <label className="font-medium text-[#1b9eaf]">Phone Number</label>
+            <label className="font-medium text-[#1b9eaf]">{t('outlet.authUser.userManagement.body.phoneNumber')}</label>
             <input
               disabled={!isEditMode}
               name="phoneNumber"
@@ -144,11 +147,11 @@ const UserViewDetails = () => {
 
       <div className="h-0.5 bg-gray-400 mb-6" />
 
-      <h3 className="text-xl font-semibold text-[#1b9eaf] mb-6">Account Information</h3>
+      <h3 className="text-xl font-semibold text-[#1b9eaf] mb-6">{t('outlet.authUser.userManagement.add.accountInformation')}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="flex flex-col gap-4">
           <div>
-            <label className="font-medium text-[#1b9eaf]">Role</label>
+            <label className="font-medium text-[#1b9eaf]">{t('outlet.authUser.userManagement.body.role')}</label>
             <select
               disabled={!isEditMode}
               name="role"
@@ -156,36 +159,36 @@ const UserViewDetails = () => {
               onChange={handleChange}
               className={`w-full p-2 border rounded-lg ${!isEditMode && "bg-gray-300"}`}
             >
-              <option value="superuser">Superuser</option>
-              <option value="admin">Admin</option>
+              <option value="supervisor">{t('outlet.authUser.userManagement.body.supervisor')}</option>
+              <option value="admin">{t('outlet.authUser.userManagement.body.admin')}</option>
             </select>
           </div>
           <div>
-            <label className="font-medium text-[#1b9eaf]">Department</label>
+            <label className="font-medium text-[#1b9eaf]">{t('outlet.authUser.userManagement.body.factory')}</label>
             <select
               disabled={!isEditMode}
               name="department"
-              value={form.department}
+              value={form.factory}
               onChange={handleChange}
               className={`w-full p-2 border rounded-lg ${!isEditMode && "bg-gray-300"}`}
             >
               <option disabled value="">
-                Select department
+                {t('outlet.authUser.userManagement.add.selectFactory')}
               </option>
               <option value="gd">Giang Dien</option>
               <option value="lt">Long Thanh</option>
               <option value="lk">Long Khanh</option>
-              <option value="all">All</option>
+              <option value="all">{t('outlet.authUser.userManagement.add.all')}</option>
             </select>
           </div>
         </div>
         <div>
-          <label className="font-medium text-[#1b9eaf]">Account Status</label>
+          <label className="font-medium text-[#1b9eaf]">{t('outlet.authUser.userManagement.body.status')}</label>
           <input
             disabled
             value={form.accountStatus}
             onChange={handleChange}
-            className={`w-full p-2 border rounded-lg bg-gray-300 ${form.accountStatus === "Active"
+            className={`w-full p-2 border rounded-lg bg-gray-300 ${form.accountStatus === "active"
               ? "text-green-600 border-black"
               : "text-yellow-600 border-black"
               }`}
@@ -199,7 +202,7 @@ const UserViewDetails = () => {
           description={description}
           inputs={[
             {
-              label: "Password",
+              label: t('signIn.password'),
               type: "password",
               value: confirmPassword,
               onChange: e => setConfirmPassword(e.target.value),
@@ -207,8 +210,8 @@ const UserViewDetails = () => {
           ]}
           buttons={[
             {
-              label: "Cancel",
-              bg: "#ff3a3a",
+              label: t('outlet.authUser.userManagement.view.cancel'),
+              bg: "#4b5563",
               textColor: "#fff",
               onClick: () => {
                 setConfirmPassword('');
@@ -217,8 +220,8 @@ const UserViewDetails = () => {
             },
             {
               label: button.label,
-              bg: "#16a34a",
-              textColor: button.color,
+              bg: button.color,
+              textColor: "#fff",
               onClick: () => {
                 confirmAction();
                 setConfirmPassword('');
