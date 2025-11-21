@@ -20,9 +20,9 @@
         "branch": "分廠"
       },
       "body": {
-        "machine": "機器",
-        "line": "產線",
-        "workOrder": "工單",
+        "machine": "機台號",
+        "line": "線別",
+        "workOrder": "工單號",
         "aql": "AQL",
         "place": "地點",
         "noData": "無資料"

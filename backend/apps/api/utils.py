@@ -21,12 +21,12 @@ def __get_pinhole_raw_data__(factory, branch, date):
 
     sql = __get_pinhole_data__query(branch, date, hour)
     rows = mes_db.select_sql_dict(sql)
-    processed_data = [process_row(r) for r in rows]
+    processed_data = [__get_pinhole_processed_data__(r) for r in rows]
     return processed_data
 
 
 
-def process_row(row):
+def __get_pinhole_processed_data__(row):
     class_ranges = {
         "class_1": [str(h).zfill(2) for h in range(6, 14)],
         "class_2": [str(h).zfill(2) for h in range(14, 22)],
@@ -56,7 +56,7 @@ def process_row(row):
             if aql == "1.0" and raw_val.isdigit():
                 total_aql += num
 
-        if total_aql > 6:
+        if total_aql >= 6:
             for hr in hours:
                 aql = (row.get(f"{hr}_aql", "") or "").strip()
                 if aql == "1.0":
@@ -71,7 +71,6 @@ def process_row(row):
             row[f"{class_name}_sum"] = total_sum
 
     return row
-
 
 
 

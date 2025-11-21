@@ -5,9 +5,9 @@
   },
   "sidebar": {
     "menu": "Danh mục",
-    "pinholeReport": "Báo cáo Pinhole",
+    "pinholeReport": "Báo cáo Lỗ Kim",
     "ipqcData": "Dữ liệu IPQC",
-    "countingData": "Dữ liệu đếm",
+    "countingData": "Dữ liệu máy đếm",
     "userManagement": "Quản lý người dùng",
     "signIn": "Đăng nhập",
     "signOut": "Đăng xuất"
@@ -15,16 +15,16 @@
   "outlet": {
     "pinholeReport": {
       "header": {
-        "pinholeTitle": "Dữ liệu kiểm tra Pinhole",
+        "pinholeTitle": "Dữ liệu kiểm tra Lỗ Kim",
         "factory": "Nhà máy",
-        "branch": "Chi nhánh"
+        "branch": "Xưởng"
       },
       "body": {
         "machine": "Máy",
-        "line": "Dây chuyền",
-        "workOrder": "Lệnh sản xuất",
+        "line": "Chuyền",
+        "workOrder": "Công đơn",
         "aql": "AQL",
-        "place": "Địa điểm",
+        "place": "Vị trí",
         "noData": "Không có dữ liệu"
       }
     },
@@ -32,7 +32,7 @@
   },
   "signIn": {
     "signInTitle": "Đăng nhập vào hệ thống PM Report",
-    "userId": "Mã người dùng",
+    "userId": "Số thẻ",
     "password": "Mật khẩu",
     "rememberMe": "Ghi nhớ đăng nhập",
     "forgotPassword": "Quên mật khẩu?",
