@@ -35,4 +35,19 @@ export const HOUR_LIST = [
   ...Array.from({ length: 6 }, (_, i) => String(i).padStart(2, '0')),
 ];
 
+export const HOUR_CLASS_CONFIG = [
+    {
+        id: "class_1",
+        hours: HOUR_LIST.slice(0, 8),   // 06–13
+    },
+    {
+        id: "class_2",
+        hours: HOUR_LIST.slice(8, 16),  // 14–21
+    },
+    {
+        id: "class_3",
+        hours: HOUR_LIST.slice(16, 24), // 22–05
+    },
+];
+
 export const REFRESH_INTERVAL = 300000;

@@ -6,18 +6,16 @@ def __get_pinhole_data__query(branch, date, hour):
                     @plant     varchar(10) = '{branch}',
                     @date      date        = '{date}',
                     @hour      varchar(10) = '{hour}';
-
-
-
+                
                 DECLARE @hour_int int = TRY_CONVERT(int, @hour);
                 DECLARE @hour_idx int = CASE 
                     WHEN @hour_int BETWEEN 6 AND 23 THEN @hour_int - 5 
                     WHEN @hour_int BETWEEN 0 AND 5  THEN @hour_int + 19
                     ELSE 24
                 END;
-
+                
                 DECLARE @wo_check_enabled bit = CASE WHEN @hour_int BETWEEN 0 AND 23 THEN 1 ELSE 0 END;
-
+                
                 ;WITH machines AS (
                     SELECT DISTINCT 
                         MES_MACHINE AS MachineName,
@@ -56,15 +54,15 @@ def __get_pinhole_data__query(branch, date, hour):
                     SELECT 
                         r.RunCardId,
                         i.OptionName,
-
+                
                         NULLIF(JSON_VALUE(i.JsonData, '$.PinholeGloveQty'), '')                                AS PinholeQtyRaw,
-
+                
                         TRY_CONVERT(decimal(18,6), NULLIF(JSON_VALUE(i.JsonData, '$.PinholeGloveQty'), ''))    AS PinholeQtyNum,
                         TRY_CONVERT(int, TRY_CONVERT(decimal(18,6), NULLIF(JSON_VALUE(i.JsonData, '$.PinholeGloveQty'), ''))) AS PinholeQtyInt,
-
+                
                         TRY_CONVERT(decimal(18,6), NULLIF(CAST(i.Lower_InspectionValue AS nvarchar(50)), ''))        AS AQLVal,
                         TRY_CONVERT(decimal(18,6), NULLIF(CAST(i.InspectionValue       AS nvarchar(50)), ''))  AS QC_AQL,
-
+                
                         pl.PlaceList,                        
                         i.InspectionStatus,
                         ROW_NUMBER() OVER (
@@ -94,7 +92,7 @@ def __get_pinhole_data__query(branch, date, hour):
                         r.MachineName,
                         r.LineName,
                         r.Period,
-
+                
                         MAX(CASE WHEN il.PinholeQtyRaw IS NOT NULL THEN il.PinholeQtyRaw END) AS ValText,
                         MAX(CASE WHEN il.PinholeQtyRaw IS NOT NULL THEN 1 ELSE 0 END)         AS HasRaw,
                         MAX(COALESCE(il.PinholeQtyNum, 0)) AS ValNum,
@@ -109,7 +107,7 @@ def __get_pinhole_data__query(branch, date, hour):
                             END
                         ) AS ValPretty,
                         MAX(il.PlaceList) AS PlaceList,
-
+                
                         MAX(COALESCE(il.AQLVal, 0)) AS AQL, 
                         MAX(il.QC_AQL)              AS QC_AQL,
                         MAX(r.WorkOrderId)          AS WO,
@@ -138,7 +136,20 @@ def __get_pinhole_data__query(branch, date, hour):
                     m.MachineName,
                     m.Line,
                     m.Code,
-
+                    
+                    CASE 
+                        WHEN @wo_check_enabled = 1 THEN 
+                            ISNULL(CONVERT(nvarchar(50), MAX(a_cur.WO)), N' ')
+                        ELSE N' '
+                    END AS [WorkOrder],
+                
+                    CASE 
+                        WHEN @wo_check_enabled = 1 THEN 
+                            ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(wo.AQL) AS decimal(18,1))), N' ')
+                        ELSE N' '
+                    END AS [AQL],
+                
+                    --Lấy ra dữ liệu pinhole gốc từ json
                     CASE WHEN  1 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  6 THEN a.ValPretty END), N'x') ELSE N' ' END AS [06],
                     CASE WHEN  2 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  7 THEN a.ValPretty END), N'x') ELSE N' ' END AS [07],
                     CASE WHEN  3 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  8 THEN a.ValPretty END), N'x') ELSE N' ' END AS [08],
@@ -163,315 +174,944 @@ def __get_pinhole_data__query(branch, date, hour):
                     CASE WHEN 22 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  3 THEN a.ValPretty END), N'x') ELSE N' ' END AS [03],
                     CASE WHEN 23 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  4 THEN a.ValPretty END), N'x') ELSE N' ' END AS [04],
                     CASE WHEN 24 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  5 THEN a.ValPretty END), N'x') ELSE N' ' END AS [05],
-
-                    CASE WHEN  1 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period =  6 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period =  6 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period =  6 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [06_color],
-                    CASE WHEN  2 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period =  7 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period =  7 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period =  7 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [07_color],
-                    CASE WHEN  3 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period =  8 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period =  8 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period =  8 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [08_color],
-                    CASE WHEN  4 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period =  9 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period =  9 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period =  9 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [09_color],
-                    CASE WHEN  5 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 10 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 10 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 10 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [10_color],
-                    CASE WHEN  6 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 11 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 11 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 11 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [11_color],
-                    CASE WHEN  7 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 12 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 12 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 12 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [12_color],
-                    CASE WHEN  8 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 13 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 13 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 13 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [13_color],
-                    CASE WHEN  9 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 14 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 14 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 14 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [14_color],
-                    CASE WHEN 10 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 15 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 15 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 15 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [15_color],
-                    CASE WHEN 11 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 16 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 16 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 16 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [16_color],
-                    CASE WHEN 12 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 17 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 17 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 17 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [17_color],
-                    CASE WHEN 13 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 18 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 18 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 18 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [18_color],
-                    CASE WHEN 14 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 19 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 19 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 19 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [19_color],
-                    CASE WHEN 15 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 20 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 20 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 20 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [20_color],
-                    CASE WHEN 16 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 21 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 21 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 21 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [21_color],
-                    CASE WHEN 17 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 22 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 22 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 22 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [22_color],
-                    CASE WHEN 18 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period = 23 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period = 23 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period = 23 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [23_color],
-                    CASE WHEN 19 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period =  0 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period =  0 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period =  0 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [00_color],
-                    CASE WHEN 20 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period =  1 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period =  1 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period =  1 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [01_color],
-                    CASE WHEN 21 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period =  2 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period =  2 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period =  2 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [02_color],
-                    CASE WHEN 22 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period =  3 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period =  3 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period =  3 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [03_color],
-                    CASE WHEN 23 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period =  4 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period =  4 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period =  4 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [04_color],
-                    CASE WHEN 24 <= @hour_idx THEN 
-                        CASE WHEN (@wo_check_enabled = 0) OR (ISNULL(MAX(CASE WHEN a.Period =  5 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
-                                THEN CASE WHEN MAX(CASE WHEN a.Period =  5 THEN a.HasNG END) = 1 THEN '2'
-                                        ELSE CASE WHEN ISNULL(MAX(CASE WHEN a.Period =  5 THEN a.ValNum END), 0) = 0 THEN '11' ELSE '12' END
-                                    END
-                                ELSE '0'
-                        END ELSE N' ' END AS [05_color],
-
-
+                
+                
+                
+                
+                
+                    -- 06_color (Period = 6, @hour_idx >= 1)
+                    CASE WHEN 1 <= @hour_idx THEN
                         CASE 
-                            WHEN @wo_check_enabled = 1 THEN 
-                                ISNULL(CONVERT(nvarchar(50), MAX(a_cur.WO)), N' ')
-                            ELSE N' '
-                        END AS [WorkOrder],
-
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 6 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    -- AQL = 1.0 theo WO_AQL
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 6 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 6 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'      -- 0 lỗi
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 6 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'      -- 1 lỗi
+                                            ELSE 
+                                                '2'           -- >1 lỗi
+                                        END
+                                    -- AQL khác 1.0: logic NG/PASS
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 6 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 6 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'  -- WO mismatch
+                        END
+                    ELSE N' ' 
+                    END AS [06_color],
+                
+                    -- 07_color (Period = 7, @hour_idx >= 2)
+                    CASE WHEN 2 <= @hour_idx THEN
                         CASE 
-                            WHEN @wo_check_enabled = 1 THEN 
-                                ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(wo.AQL) AS decimal(18,1))), N' ')
-                            ELSE N' '
-                        END AS [AQL],
-
-                        CASE WHEN  1 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  6 THEN a.WO END)), N'x') ELSE N' ' END AS [06_wo],
-                        CASE WHEN  2 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  7 THEN a.WO END)), N'x') ELSE N' ' END AS [07_wo],
-                        CASE WHEN  3 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  8 THEN a.WO END)), N'x') ELSE N' ' END AS [08_wo],
-                        CASE WHEN  4 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  9 THEN a.WO END)), N'x') ELSE N' ' END AS [09_wo],
-                        CASE WHEN  5 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 10 THEN a.WO END)), N'x') ELSE N' ' END AS [10_wo],
-                        CASE WHEN  6 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 11 THEN a.WO END)), N'x') ELSE N' ' END AS [11_wo],
-                        CASE WHEN  7 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 12 THEN a.WO END)), N'x') ELSE N' ' END AS [12_wo],
-                        CASE WHEN  8 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 13 THEN a.WO END)), N'x') ELSE N' ' END AS [13_wo],
-                        CASE WHEN  9 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 14 THEN a.WO END)), N'x') ELSE N' ' END AS [14_wo],
-                        CASE WHEN 10 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 15 THEN a.WO END)), N'x') ELSE N' ' END AS [15_wo],
-                        CASE WHEN 11 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 16 THEN a.WO END)), N'x') ELSE N' ' END AS [16_wo],
-                        CASE WHEN 12 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 17 THEN a.WO END)), N'x') ELSE N' ' END AS [17_wo],
-                        CASE WHEN 13 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 18 THEN a.WO END)), N'x') ELSE N' ' END AS [18_wo],
-                        CASE WHEN 14 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 19 THEN a.WO END)), N'x') ELSE N' ' END AS [19_wo],
-                        CASE WHEN 15 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 20 THEN a.WO END)), N'x') ELSE N' ' END AS [20_wo],
-                        CASE WHEN 16 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 21 THEN a.WO END)), N'x') ELSE N' ' END AS [21_wo],
-                        CASE WHEN 17 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 22 THEN a.WO END)), N'x') ELSE N' ' END AS [22_wo],
-                        CASE WHEN 18 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 23 THEN a.WO END)), N'x') ELSE N' ' END AS [23_wo],
-                        CASE WHEN 19 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  0 THEN a.WO END)), N'x') ELSE N' ' END AS [00_wo],
-                        CASE WHEN 20 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  1 THEN a.WO END)), N'x') ELSE N' ' END AS [01_wo],
-                        CASE WHEN 21 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  2 THEN a.WO END)), N'x') ELSE N' ' END AS [02_wo],
-                        CASE WHEN 22 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  3 THEN a.WO END)), N'x') ELSE N' ' END AS [03_wo],
-                        CASE WHEN 23 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  4 THEN a.WO END)), N'x') ELSE N' ' END AS [04_wo],
-                        CASE WHEN 24 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  5 THEN a.WO END)), N'x') ELSE N' ' END AS [05_wo],
-
-                        CASE WHEN  1 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  6 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [06_aql],
-                        CASE WHEN  2 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  7 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [07_aql],
-                        CASE WHEN  3 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  8 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [08_aql],
-                        CASE WHEN  4 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  9 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [09_aql],
-                        CASE WHEN  5 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 10 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [10_aql],
-                        CASE WHEN  6 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 11 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [11_aql],
-                        CASE WHEN  7 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 12 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [12_aql],
-                        CASE WHEN  8 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 13 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [13_aql],
-                        CASE WHEN  9 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 14 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [14_aql],
-                        CASE WHEN 10 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 15 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [15_aql],
-                        CASE WHEN 11 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 16 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [16_aql],
-                        CASE WHEN 12 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 17 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [17_aql],
-                        CASE WHEN 13 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 18 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [18_aql],
-                        CASE WHEN 14 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 19 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [19_aql],
-                        CASE WHEN 15 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 20 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [20_aql],
-                        CASE WHEN 16 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 21 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [21_aql],
-                        CASE WHEN 17 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 22 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [22_aql],
-                        CASE WHEN 18 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 23 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [23_aql],
-                        CASE WHEN 19 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  0 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [00_aql],
-                        CASE WHEN 20 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  1 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [01_aql],
-                        CASE WHEN 21 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  2 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [02_aql],
-                        CASE WHEN 22 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  3 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [03_aql],
-                        CASE WHEN 23 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  4 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [04_aql],
-                        CASE WHEN 24 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  5 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [05_aql],
-
-
-                        CASE WHEN  1 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  6 THEN a.PlaceList END), N'') ELSE N' ' END AS [06_place],
-                        CASE WHEN  2 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  7 THEN a.PlaceList END), N'') ELSE N' ' END AS [07_place],
-                        CASE WHEN  3 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  8 THEN a.PlaceList END), N'') ELSE N' ' END AS [08_place],
-                        CASE WHEN  4 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  9 THEN a.PlaceList END), N'') ELSE N' ' END AS [09_place],
-                        CASE WHEN  5 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  10 THEN a.PlaceList END), N'') ELSE N' ' END AS [10_place],
-                        CASE WHEN  6 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  11 THEN a.PlaceList END), N'') ELSE N' ' END AS [11_place],
-                        CASE WHEN  7 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  12 THEN a.PlaceList END), N'') ELSE N' ' END AS [12_place],
-                        CASE WHEN  8 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  13 THEN a.PlaceList END), N'') ELSE N' ' END AS [13_place],
-                        CASE WHEN  9 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  14 THEN a.PlaceList END), N'') ELSE N' ' END AS [14_place],
-                        CASE WHEN  10 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  15 THEN a.PlaceList END), N'') ELSE N' ' END AS [15_place],
-                        CASE WHEN  11 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  16 THEN a.PlaceList END), N'') ELSE N' ' END AS [16_place],
-                        CASE WHEN  12 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  17 THEN a.PlaceList END), N'') ELSE N' ' END AS [17_place],
-                        CASE WHEN  13 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  18 THEN a.PlaceList END), N'') ELSE N' ' END AS [18_place],
-                        CASE WHEN  14 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  19 THEN a.PlaceList END), N'') ELSE N' ' END AS [19_place],
-                        CASE WHEN  15 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  20 THEN a.PlaceList END), N'') ELSE N' ' END AS [20_place],
-                        CASE WHEN  16 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  21 THEN a.PlaceList END), N'') ELSE N' ' END AS [21_place],
-                        CASE WHEN  17 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  22 THEN a.PlaceList END), N'') ELSE N' ' END AS [22_place],
-                        CASE WHEN  18 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  23 THEN a.PlaceList END), N'') ELSE N' ' END AS [23_place],
-                        CASE WHEN  19 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  00 THEN a.PlaceList END), N'') ELSE N' ' END AS [00_place],
-                        CASE WHEN  20 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  01 THEN a.PlaceList END), N'') ELSE N' ' END AS [01_place],
-                        CASE WHEN  21 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  02 THEN a.PlaceList END), N'') ELSE N' ' END AS [02_place],
-                        CASE WHEN  22 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  03 THEN a.PlaceList END), N'') ELSE N' ' END AS [03_place],
-                        CASE WHEN  23 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  04 THEN a.PlaceList END), N'') ELSE N' ' END AS [04_place],
-                        CASE WHEN  24 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  05 THEN a.PlaceList END), N'') ELSE N' ' END AS [05_place],
-
-                        CASE WHEN  1 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  6 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [06_qcaql],
-                        CASE WHEN  2 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  7 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [07_qcaql],
-                        CASE WHEN  3 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  8 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [08_qcaql],
-                        CASE WHEN  4 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  9 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [09_qcaql],
-                        CASE WHEN  5 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  10 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [10_qcaql],
-                        CASE WHEN  6 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  11 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [11_qcaql],
-                        CASE WHEN  7 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  12 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [12_qcaql],
-                        CASE WHEN  8 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  13 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [13_qcaql],
-                        CASE WHEN  9 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  14 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [14_qcaql],
-                        CASE WHEN  10 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  15 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [15_qcaql],
-                        CASE WHEN  11 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  16 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [16_qcaql],
-                        CASE WHEN  12 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  17 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [17_qcaql],
-                        CASE WHEN  13 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  18 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [18_qcaql],
-                        CASE WHEN  14 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  19 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [19_qcaql],
-                        CASE WHEN  15 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  20 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [20_qcaql],
-                        CASE WHEN  16 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  21 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [21_qcaql],
-                        CASE WHEN  17 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  22 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [22_qcaql],
-                        CASE WHEN  18 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  23 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [23_qcaql],
-                        CASE WHEN  19 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  00 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [00_qcaql],
-                        CASE WHEN  20 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  01 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [01_qcaql],
-                        CASE WHEN  21 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  02 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [02_qcaql],
-                        CASE WHEN  22 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  03 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [03_qcaql],
-                        CASE WHEN  23 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  04 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [04_qcaql],
-                        CASE WHEN  24 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  05 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [05_qcaql],
-
-                        CASE WHEN  1 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  6 THEN a.ProductItem END), N'x') ELSE N' ' END AS [06_item],
-                        CASE WHEN  2 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  7 THEN a.ProductItem END), N'x') ELSE N' ' END AS [07_item],
-                        CASE WHEN  3 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  8 THEN a.ProductItem END), N'x') ELSE N' ' END AS [08_item],
-                        CASE WHEN  4 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  9 THEN a.ProductItem END), N'x') ELSE N' ' END AS [09_item],
-                        CASE WHEN  5 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 10 THEN a.ProductItem END), N'x') ELSE N' ' END AS [10_item],
-                        CASE WHEN  6 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 11 THEN a.ProductItem END), N'x') ELSE N' ' END AS [11_item],
-                        CASE WHEN  7 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 12 THEN a.ProductItem END), N'x') ELSE N' ' END AS [12_item],
-                        CASE WHEN  8 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 13 THEN a.ProductItem END), N'x') ELSE N' ' END AS [13_item],
-                        CASE WHEN  9 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 14 THEN a.ProductItem END), N'x') ELSE N' ' END AS [14_item],
-                        CASE WHEN 10 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 15 THEN a.ProductItem END), N'x') ELSE N' ' END AS [15_item],
-                        CASE WHEN 11 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 16 THEN a.ProductItem END), N'x') ELSE N' ' END AS [16_item],
-                        CASE WHEN 12 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 17 THEN a.ProductItem END), N'x') ELSE N' ' END AS [17_item],
-                        CASE WHEN 13 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 18 THEN a.ProductItem END), N'x') ELSE N' ' END AS [18_item],
-                        CASE WHEN 14 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 19 THEN a.ProductItem END), N'x') ELSE N' ' END AS [19_item],
-                        CASE WHEN 15 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 20 THEN a.ProductItem END), N'x') ELSE N' ' END AS [20_item],
-                        CASE WHEN 16 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 21 THEN a.ProductItem END), N'x') ELSE N' ' END AS [21_item],
-                        CASE WHEN 17 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 22 THEN a.ProductItem END), N'x') ELSE N' ' END AS [22_item],
-                        CASE WHEN 18 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 23 THEN a.ProductItem END), N'x') ELSE N' ' END AS [23_item],
-                        CASE WHEN 19 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  0 THEN a.ProductItem END), N'x') ELSE N' ' END AS [00_item],
-                        CASE WHEN 20 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  1 THEN a.ProductItem END), N'x') ELSE N' ' END AS [01_item],
-                        CASE WHEN 21 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  2 THEN a.ProductItem END), N'x') ELSE N' ' END AS [02_item],
-                        CASE WHEN 22 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  3 THEN a.ProductItem END), N'x') ELSE N' ' END AS [03_item],
-                        CASE WHEN 23 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  4 THEN a.ProductItem END), N'x') ELSE N' ' END AS [04_item],
-                        CASE WHEN 24 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  5 THEN a.ProductItem END), N'x') ELSE N' ' END AS [05_item]
-
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 7 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 7 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 7 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 7 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 7 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 7 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [07_color],
+                
+                    -- 08_color (Period = 8, @hour_idx >= 3)
+                    CASE WHEN 3 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 8 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 8 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 8 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 8 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 8 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 8 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [08_color],
+                
+                    -- 09_color (Period = 9, @hour_idx >= 4)
+                    CASE WHEN 4 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 9 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 9 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 9 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 9 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 9 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 9 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [09_color],
+                
+                    -- 10_color (Period = 10, @hour_idx >= 5)
+                    CASE WHEN 5 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 10 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 10 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 10 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 10 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 10 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 10 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [10_color],
+                
+                    -- 11_color (Period = 11, @hour_idx >= 6)
+                    CASE WHEN 6 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 11 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 11 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 11 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 11 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 11 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 11 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [11_color],
+                
+                    -- 12_color (Period = 12, @hour_idx >= 7)
+                    CASE WHEN 7 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 12 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 12 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 12 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 12 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 12 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 12 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [12_color],
+                
+                    -- 13_color (Period = 13, @hour_idx >= 8)
+                    CASE WHEN 8 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 13 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 13 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 13 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 13 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 13 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 13 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [13_color],
+                
+                    -- 14_color (Period = 14, @hour_idx >= 9)
+                    CASE WHEN 9 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 14 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 14 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 14 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 14 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 14 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 14 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [14_color],
+                
+                    -- 15_color (Period = 15, @hour_idx >= 10)
+                    CASE WHEN 10 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 15 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 15 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 15 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 15 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 15 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 15 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [15_color],
+                
+                    -- 16_color (Period = 16, @hour_idx >= 11)
+                    CASE WHEN 11 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 16 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 16 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 16 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 16 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 16 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 16 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [16_color],
+                
+                    -- 17_color (Period = 17, @hour_idx >= 12)
+                    CASE WHEN 12 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 17 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 17 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 17 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 17 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 17 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 17 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [17_color],
+                
+                    -- 18_color (Period = 18, @hour_idx >= 13)
+                    CASE WHEN 13 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 18 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 18 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 18 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 18 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 18 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 18 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [18_color],
+                
+                    -- 19_color (Period = 19, @hour_idx >= 14)
+                    CASE WHEN 14 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 19 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 19 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 19 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 19 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 19 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 19 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [19_color],
+                
+                    -- 20_color (Period = 20, @hour_idx >= 15)
+                    CASE WHEN 15 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 20 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 20 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 20 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 20 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 20 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 20 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [20_color],
+                
+                    -- 21_color (Period = 21, @hour_idx >= 16)
+                    CASE WHEN 16 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 21 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 21 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 21 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 21 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 21 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 21 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [21_color],
+                
+                    -- 22_color (Period = 22, @hour_idx >= 17)
+                    CASE WHEN 17 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 22 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 22 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 22 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 22 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 22 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 22 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [22_color],
+                
+                    -- 23_color (Period = 23, @hour_idx >= 18)
+                    CASE WHEN 18 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 23 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 23 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 23 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 23 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 23 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 23 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [23_color],
+                
+                    -- 00_color (Period = 0, @hour_idx >= 19)
+                    CASE WHEN 19 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 0 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 0 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 0 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 0 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 0 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 0 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [00_color],
+                
+                    -- 01_color (Period = 1, @hour_idx >= 20)
+                    CASE WHEN 20 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 1 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 1 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 1 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 1 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 1 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 1 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [01_color],
+                
+                    -- 02_color (Period = 2, @hour_idx >= 21)
+                    CASE WHEN 21 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 2 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 2 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 2 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 2 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 2 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 2 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [02_color],
+                
+                    -- 03_color (Period = 3, @hour_idx >= 22)
+                    CASE WHEN 22 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 3 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 3 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 3 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 3 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 3 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 3 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [03_color],
+                
+                    -- 04_color (Period = 4, @hour_idx >= 23)
+                    CASE WHEN 23 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 4 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 4 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 4 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 4 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 4 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 4 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [04_color],
+                
+                    -- 05_color (Period = 5, @hour_idx >= 24)
+                    CASE WHEN 24 <= @hour_idx THEN
+                        CASE 
+                            WHEN (@wo_check_enabled = 0)
+                              OR (ISNULL(MAX(CASE WHEN a.Period = 5 THEN a.WO END), 0) = ISNULL(rw.RefWO, 0))
+                            THEN 
+                                CASE 
+                                    WHEN TRY_CAST(MAX(CASE WHEN a.Period = 5 THEN a.WO_AQL END) AS decimal(18,1)) = 1.0
+                                    THEN 
+                                        CASE 
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 5 THEN a.ValNum END), 0) = 0 
+                                                THEN '11'
+                                            WHEN ISNULL(MAX(CASE WHEN a.Period = 5 THEN a.ValNum END), 0) = 1 
+                                                THEN '12'
+                                            ELSE 
+                                                '2'
+                                        END
+                                    ELSE 
+                                        CASE 
+                                            WHEN MAX(CASE WHEN a.Period = 5 THEN a.HasNG END) = 1 THEN '2'
+                                            ELSE 
+                                                CASE 
+                                                    WHEN ISNULL(MAX(CASE WHEN a.Period = 5 THEN a.ValNum END), 0) = 0 
+                                                        THEN '11'
+                                                    ELSE '12'
+                                                END
+                                        END
+                                END
+                            ELSE '0'
+                        END
+                    ELSE N' ' 
+                    END AS [05_color],
+                
+                
+                
+                    CASE WHEN  1 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  6 THEN a.WO END)), N'x') ELSE N' ' END AS [06_wo],
+                    CASE WHEN  2 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  7 THEN a.WO END)), N'x') ELSE N' ' END AS [07_wo],
+                    CASE WHEN  3 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  8 THEN a.WO END)), N'x') ELSE N' ' END AS [08_wo],
+                    CASE WHEN  4 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  9 THEN a.WO END)), N'x') ELSE N' ' END AS [09_wo],
+                    CASE WHEN  5 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 10 THEN a.WO END)), N'x') ELSE N' ' END AS [10_wo],
+                    CASE WHEN  6 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 11 THEN a.WO END)), N'x') ELSE N' ' END AS [11_wo],
+                    CASE WHEN  7 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 12 THEN a.WO END)), N'x') ELSE N' ' END AS [12_wo],
+                    CASE WHEN  8 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 13 THEN a.WO END)), N'x') ELSE N' ' END AS [13_wo],
+                    CASE WHEN  9 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 14 THEN a.WO END)), N'x') ELSE N' ' END AS [14_wo],
+                    CASE WHEN 10 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 15 THEN a.WO END)), N'x') ELSE N' ' END AS [15_wo],
+                    CASE WHEN 11 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 16 THEN a.WO END)), N'x') ELSE N' ' END AS [16_wo],
+                    CASE WHEN 12 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 17 THEN a.WO END)), N'x') ELSE N' ' END AS [17_wo],
+                    CASE WHEN 13 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 18 THEN a.WO END)), N'x') ELSE N' ' END AS [18_wo],
+                    CASE WHEN 14 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 19 THEN a.WO END)), N'x') ELSE N' ' END AS [19_wo],
+                    CASE WHEN 15 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 20 THEN a.WO END)), N'x') ELSE N' ' END AS [20_wo],
+                    CASE WHEN 16 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 21 THEN a.WO END)), N'x') ELSE N' ' END AS [21_wo],
+                    CASE WHEN 17 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 22 THEN a.WO END)), N'x') ELSE N' ' END AS [22_wo],
+                    CASE WHEN 18 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period = 23 THEN a.WO END)), N'x') ELSE N' ' END AS [23_wo],
+                    CASE WHEN 19 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  0 THEN a.WO END)), N'x') ELSE N' ' END AS [00_wo],
+                    CASE WHEN 20 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  1 THEN a.WO END)), N'x') ELSE N' ' END AS [01_wo],
+                    CASE WHEN 21 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  2 THEN a.WO END)), N'x') ELSE N' ' END AS [02_wo],
+                    CASE WHEN 22 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  3 THEN a.WO END)), N'x') ELSE N' ' END AS [03_wo],
+                    CASE WHEN 23 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  4 THEN a.WO END)), N'x') ELSE N' ' END AS [04_wo],
+                    CASE WHEN 24 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(50), MAX(CASE WHEN a.Period =  5 THEN a.WO END)), N'x') ELSE N' ' END AS [05_wo],
+                
+                
+                
+                    CASE WHEN  1 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  6 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [06_aql],
+                    CASE WHEN  2 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  7 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [07_aql],
+                    CASE WHEN  3 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  8 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [08_aql],
+                    CASE WHEN  4 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  9 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [09_aql],
+                    CASE WHEN  5 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 10 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [10_aql],
+                    CASE WHEN  6 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 11 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [11_aql],
+                    CASE WHEN  7 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 12 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [12_aql],
+                    CASE WHEN  8 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 13 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [13_aql],
+                    CASE WHEN  9 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 14 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [14_aql],
+                    CASE WHEN 10 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 15 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [15_aql],
+                    CASE WHEN 11 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 16 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [16_aql],
+                    CASE WHEN 12 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 17 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [17_aql],
+                    CASE WHEN 13 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 18 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [18_aql],
+                    CASE WHEN 14 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 19 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [19_aql],
+                    CASE WHEN 15 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 20 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [20_aql],
+                    CASE WHEN 16 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 21 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [21_aql],
+                    CASE WHEN 17 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 22 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [22_aql],
+                    CASE WHEN 18 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period = 23 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [23_aql],
+                    CASE WHEN 19 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  0 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [00_aql],
+                    CASE WHEN 20 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  1 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [01_aql],
+                    CASE WHEN 21 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  2 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [02_aql],
+                    CASE WHEN 22 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  3 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [03_aql],
+                    CASE WHEN 23 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  4 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [04_aql],
+                    CASE WHEN 24 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  5 THEN a.WO_AQL END) AS decimal(18,1))), N'x') ELSE N' ' END AS [05_aql],
+                
+                
+                
+                    CASE WHEN  1 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  6 THEN a.PlaceList END), N'') ELSE N' ' END AS [06_place],
+                    CASE WHEN  2 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  7 THEN a.PlaceList END), N'') ELSE N' ' END AS [07_place],
+                    CASE WHEN  3 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  8 THEN a.PlaceList END), N'') ELSE N' ' END AS [08_place],
+                    CASE WHEN  4 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  9 THEN a.PlaceList END), N'') ELSE N' ' END AS [09_place],
+                    CASE WHEN  5 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  10 THEN a.PlaceList END), N'') ELSE N' ' END AS [10_place],
+                    CASE WHEN  6 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  11 THEN a.PlaceList END), N'') ELSE N' ' END AS [11_place],
+                    CASE WHEN  7 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  12 THEN a.PlaceList END), N'') ELSE N' ' END AS [12_place],
+                    CASE WHEN  8 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  13 THEN a.PlaceList END), N'') ELSE N' ' END AS [13_place],
+                    CASE WHEN  9 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  14 THEN a.PlaceList END), N'') ELSE N' ' END AS [14_place],
+                    CASE WHEN  10 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  15 THEN a.PlaceList END), N'') ELSE N' ' END AS [15_place],
+                    CASE WHEN  11 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  16 THEN a.PlaceList END), N'') ELSE N' ' END AS [16_place],
+                    CASE WHEN  12 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  17 THEN a.PlaceList END), N'') ELSE N' ' END AS [17_place],
+                    CASE WHEN  13 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  18 THEN a.PlaceList END), N'') ELSE N' ' END AS [18_place],
+                    CASE WHEN  14 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  19 THEN a.PlaceList END), N'') ELSE N' ' END AS [19_place],
+                    CASE WHEN  15 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  20 THEN a.PlaceList END), N'') ELSE N' ' END AS [20_place],
+                    CASE WHEN  16 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  21 THEN a.PlaceList END), N'') ELSE N' ' END AS [21_place],
+                    CASE WHEN  17 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  22 THEN a.PlaceList END), N'') ELSE N' ' END AS [22_place],
+                    CASE WHEN  18 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  23 THEN a.PlaceList END), N'') ELSE N' ' END AS [23_place],
+                    CASE WHEN  19 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  00 THEN a.PlaceList END), N'') ELSE N' ' END AS [00_place],
+                    CASE WHEN  20 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  01 THEN a.PlaceList END), N'') ELSE N' ' END AS [01_place],
+                    CASE WHEN  21 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  02 THEN a.PlaceList END), N'') ELSE N' ' END AS [02_place],
+                    CASE WHEN  22 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  03 THEN a.PlaceList END), N'') ELSE N' ' END AS [03_place],
+                    CASE WHEN  23 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  04 THEN a.PlaceList END), N'') ELSE N' ' END AS [04_place],
+                    CASE WHEN  24 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  05 THEN a.PlaceList END), N'') ELSE N' ' END AS [05_place],
+                
+                        
+                
+                
+                    CASE WHEN  1 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  6 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [06_qcaql],
+                    CASE WHEN  2 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  7 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [07_qcaql],
+                    CASE WHEN  3 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  8 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [08_qcaql],
+                    CASE WHEN  4 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  9 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [09_qcaql],
+                    CASE WHEN  5 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  10 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [10_qcaql],
+                    CASE WHEN  6 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  11 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [11_qcaql],
+                    CASE WHEN  7 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  12 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [12_qcaql],
+                    CASE WHEN  8 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  13 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [13_qcaql],
+                    CASE WHEN  9 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  14 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [14_qcaql],
+                    CASE WHEN  10 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  15 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [15_qcaql],
+                    CASE WHEN  11 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  16 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [16_qcaql],
+                    CASE WHEN  12 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  17 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [17_qcaql],
+                    CASE WHEN  13 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  18 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [18_qcaql],
+                    CASE WHEN  14 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  19 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [19_qcaql],
+                    CASE WHEN  15 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  20 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [20_qcaql],
+                    CASE WHEN  16 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  21 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [21_qcaql],
+                    CASE WHEN  17 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  22 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [22_qcaql],
+                    CASE WHEN  18 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  23 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [23_qcaql],
+                    CASE WHEN  19 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  00 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [00_qcaql],
+                    CASE WHEN  20 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  01 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [01_qcaql],
+                    CASE WHEN  21 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  02 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [02_qcaql],
+                    CASE WHEN  22 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  03 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [03_qcaql],
+                    CASE WHEN  23 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  04 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [04_qcaql],
+                    CASE WHEN  24 <= @hour_idx THEN ISNULL(CONVERT(nvarchar(20), TRY_CAST(MAX(CASE WHEN a.Period =  05 THEN a.QC_AQL  END) AS decimal(18,1))), N'x')  ELSE N' ' END AS [05_qcaql],
+                
+                        
+                
+                
+                    CASE WHEN  1 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  6 THEN a.ProductItem END), N'x') ELSE N' ' END AS [06_item],
+                    CASE WHEN  2 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  7 THEN a.ProductItem END), N'x') ELSE N' ' END AS [07_item],
+                    CASE WHEN  3 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  8 THEN a.ProductItem END), N'x') ELSE N' ' END AS [08_item],
+                    CASE WHEN  4 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  9 THEN a.ProductItem END), N'x') ELSE N' ' END AS [09_item],
+                    CASE WHEN  5 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 10 THEN a.ProductItem END), N'x') ELSE N' ' END AS [10_item],
+                    CASE WHEN  6 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 11 THEN a.ProductItem END), N'x') ELSE N' ' END AS [11_item],
+                    CASE WHEN  7 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 12 THEN a.ProductItem END), N'x') ELSE N' ' END AS [12_item],
+                    CASE WHEN  8 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 13 THEN a.ProductItem END), N'x') ELSE N' ' END AS [13_item],
+                    CASE WHEN  9 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 14 THEN a.ProductItem END), N'x') ELSE N' ' END AS [14_item],
+                    CASE WHEN 10 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 15 THEN a.ProductItem END), N'x') ELSE N' ' END AS [15_item],
+                    CASE WHEN 11 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 16 THEN a.ProductItem END), N'x') ELSE N' ' END AS [16_item],
+                    CASE WHEN 12 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 17 THEN a.ProductItem END), N'x') ELSE N' ' END AS [17_item],
+                    CASE WHEN 13 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 18 THEN a.ProductItem END), N'x') ELSE N' ' END AS [18_item],
+                    CASE WHEN 14 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 19 THEN a.ProductItem END), N'x') ELSE N' ' END AS [19_item],
+                    CASE WHEN 15 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 20 THEN a.ProductItem END), N'x') ELSE N' ' END AS [20_item],
+                    CASE WHEN 16 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 21 THEN a.ProductItem END), N'x') ELSE N' ' END AS [21_item],
+                    CASE WHEN 17 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 22 THEN a.ProductItem END), N'x') ELSE N' ' END AS [22_item],
+                    CASE WHEN 18 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period = 23 THEN a.ProductItem END), N'x') ELSE N' ' END AS [23_item],
+                    CASE WHEN 19 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  0 THEN a.ProductItem END), N'x') ELSE N' ' END AS [00_item],
+                    CASE WHEN 20 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  1 THEN a.ProductItem END), N'x') ELSE N' ' END AS [01_item],
+                    CASE WHEN 21 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  2 THEN a.ProductItem END), N'x') ELSE N' ' END AS [02_item],
+                    CASE WHEN 22 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  3 THEN a.ProductItem END), N'x') ELSE N' ' END AS [03_item],
+                    CASE WHEN 23 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  4 THEN a.ProductItem END), N'x') ELSE N' ' END AS [04_item],
+                    CASE WHEN 24 <= @hour_idx THEN ISNULL(MAX(CASE WHEN a.Period =  5 THEN a.ProductItem END), N'x') ELSE N' ' END AS [05_item]
+                
+                        
+                
                 FROM machines m
                 LEFT JOIN data_agg a
                         ON a.MachineName = m.MachineName
@@ -479,21 +1119,22 @@ def __get_pinhole_data__query(branch, date, hour):
                 LEFT JOIN ref_wo rw
                         ON rw.MachineName = m.MachineName
                         AND rw.LineName    = m.Line
-
-
+                
+                
                 LEFT JOIN data_agg a_cur
                         ON a_cur.MachineName = m.MachineName
                         AND a_cur.LineName    = m.Line
                         AND a_cur.Period      = @hour_int
                         AND @wo_check_enabled = 1
-
-
+                
+                
                 LEFT JOIN [PMGMES].[dbo].[PMG_MES_WorkOrder] wo
                         ON wo.Id = a_cur.WO
                         AND @wo_check_enabled = 1
-
+                
                 GROUP BY m.MachineName, m.Line, m.Code, rw.RefWO
                 ORDER BY m.MachineName, m.Line;
+
 
                 """
     return raw_query
