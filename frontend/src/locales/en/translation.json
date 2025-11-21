@@ -28,7 +28,80 @@
         "noData": "No data"
       }
     },
-    "admin": {}
+    "authUser": {
+      "userManagement": {
+        "header": {
+          "authorizedUser": "Authorized User",
+          "searchPlaceholder": "Search user by id or name...",
+          "addNewUser": "Add new user",
+          "activate": "Activate",
+          "deactivate": "Deactivate",
+          "delete": "Delete permanently"
+        },
+        "body": {
+          "userId": "User ID",
+          "fullName": "Full Name",
+          "role": "Role",
+          "email": "Email",
+          "phoneNumber": "Phone Number",
+          "factory": "Factory",
+          "status": "Status",
+          "active": "Active",
+          "inactive": "Inactive",
+          "noSort": "No sort",
+          "asc": "Ascending",
+          "desc": "Descending",
+          "viewDetails": "View Details",
+          "supervisor": "Supervisor",
+          "admin": "Admin"
+        },
+        "add": {
+          "addUser": "Add User",
+          "personalInformation": "Personal Information",
+          "accountInformation": "Account Information",
+          "defaultPassword": "Default Password",
+          "selectFactory": "Select factory",
+          "all": "All"
+        },
+        "view": {
+          "edit": "Edit",
+          "update": "Update",
+          "cancel": "Cancel",
+          "setDefaultPassword": "Set Default Password"
+        },
+        "popup": {
+          "title": {
+            "update": "Update user information",
+            "delete": "Delete user account",
+            "resetDefaultPassword": "Reset default password",
+            "activate": "Activate user",
+            "deactivate": "Deactivate user"
+          },
+          "description": {
+            "update": "This will update user information. Please enter password to confirm changes.",
+            "delete": "This will permanently delete the user. Please enter password to confirm changes.",
+            "resetDefaultPassword": "This will reset the password. Please enter password to confirm changes.",
+            "activate": "This will activate the account. Please enter password to confirm changes.",
+            "deactivate": "This will deactivate the account. Please enter password to confirm changes."
+          }
+        }
+      },
+      "profile": {
+        "dataFields": {
+          "profileInformation": "Profile Information",
+          "updateProfile": "Update Profile",
+          "passwordSection": "Password Section",
+          "changeNewPassword": "Change new password",
+          "currentPassword": "Current Password",
+          "newPassword": "New Password",
+          "confirmPassword": "Confirm Password"
+        },
+        "popup": {
+          "title": "Update profile",
+          "description": "This will update the changes of your profile. Please enter your password to confirm changes."
+        }
+      }
+    }
   },
   "signIn": {
     "signInTitle": "Sign in to PM Report",
@@ -52,6 +125,23 @@
   },
   "error": {
     "internalServerError": "Internal Server Error!"
+  },
+  "popup": {
+    "buttons": {
+      "update": "Update",
+      "delete": "Delete permanently",
+      "resetDefaultPassword": "Reset Default Passowrd",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "title": {
+      "changePassword": "Change Password"
+    },
+    "description": {
+      "changePassword": "This will change your password. Please keep and secure password."
+    }
   },
   "language": "Language"
 }
