@@ -8,8 +8,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 17501;
-const BACKEND_URL = "http://172.18.55.215:17500";
+const PORT = process.env.PORT || 30001;
+const BACKEND_URL = process.env.BACKEND_URL || 'http://pm-report-backend:30000';
+//const BACKEND_URL = "http://172.18.55.215:30000";
 
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
