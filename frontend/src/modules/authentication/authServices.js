@@ -18,7 +18,7 @@ import getCookie from "@utils/getCookie";
 const signInAPI = async ({ userId, password }) => {
   const token = getCookie('csrftoken');
   try {
-    let resOfSignIn = await api.post('/users/login/',
+    let resOfSignIn = await api.post('/users/post-login/',
       {
         user_id: userId,
         password: password,

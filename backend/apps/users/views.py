@@ -14,7 +14,7 @@ def csrf(request):
 
 @csrf_exempt
 @require_POST
-def login_view(request):
+def post_login(request):
     try:
         data = json.loads(request.body.decode("utf-8"))
     except Exception:
@@ -45,14 +45,14 @@ def login_view(request):
 
 
 @require_POST
-def logout_view(request):
+def post_logout(request):
     logout(request)
     return JsonResponse({"detail": "Success"}, status=200)
 
 
 @login_required
 @require_GET
-def home(request):
+def get_home(request):
     u = request.user
     return JsonResponse({
         "user": {
