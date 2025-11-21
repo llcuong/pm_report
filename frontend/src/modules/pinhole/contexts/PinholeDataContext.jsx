@@ -1,5 +1,6 @@
 import { createContext } from "react";
-import usePinholeSelectOptionFetcher from "../hooks/usePinholeSelectOptionFetcher";
+import useFactoryAndBranch from "../hooks/useFactoryAndBranch";
+import useDateAndAql from "../hooks/useDateAndAql";
 
 // Returned data and data status with API stored in context
 /**
@@ -45,15 +46,17 @@ import usePinholeSelectOptionFetcher from "../hooks/usePinholeSelectOptionFetche
 export const PinholeDataContext = createContext(null);
 
 export const PinholeDataProvider = ({ children }) => {
+  const {
+    selectedFactory, setSelectedFactory,
+    branchData, selectedBranch, setSelectedBranch
+  } = useFactoryAndBranch();
 
   const {
     aqlData, selectedAql, setSelectedAql,
-    selectedFactory, setSelectedFactory,
-    branchData, selectedBranch, setSelectedBranch,
     selectedDate, setSelectedDate,
     viewData,
     isFetching, isPendingUI, isAPIError,
-  } = usePinholeSelectOptionFetcher();
+  } = useDateAndAql({ selectedFactory, selectedBranch });
 
   const stateValueList = {
     aqlData, selectedAql, setSelectedAql,
