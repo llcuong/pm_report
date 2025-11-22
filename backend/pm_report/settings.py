@@ -43,7 +43,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'rest_framework'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'apps.api.helpers.CustomJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+}
+
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
@@ -121,6 +130,30 @@ DATABASES = {
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
         }
+    },
+    'SAP': {
+        'ENGINE': 'mssql',
+        'NAME': 'PMG_DEVICE',
+        'USER': 'sa',
+        'PASSWORD': '!QAw3ed',
+        'HOST': '10.13.102.22',
+        'PORT': '1433',
+
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+        },
+    },
+    'MES': {
+        'ENGINE': 'mssql',
+        'NAME': 'PMGMES',
+        'USER': 'scadauser',
+        'PASSWORD': 'pmgscada+123',
+        'HOST': '10.13.102.22',
+        'PORT': '1433',
+
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+        },
     }
 }
 

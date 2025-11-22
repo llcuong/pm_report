@@ -1,8 +1,6 @@
 from datetime import timedelta
-
 from modules.helpers._get_factory_mes_database_ import __get_factory_mes_database__
 from modules.databases.query.mes_raw_query import __get_pinhole_data__query
-
 from apps.api.helpers import __get_gmt_7_hour__
 
 
