@@ -1,6 +1,6 @@
+import useDateAndMachine from "@modules/authorizationApp/hooks/useDateAndMachine";
+import useFactoryAndBranch from "@modules/authorizationApp/hooks/useFactoryAndBranch";
 import React, { createContext } from "react";
-import useDateAndMachine from "../useDateAndMachine";
-import useFactoryAndBranch from "@modules/pinhole/hooks/useFactoryAndBranch";
 
 // Returned data and data status with API stored in context
 /**
