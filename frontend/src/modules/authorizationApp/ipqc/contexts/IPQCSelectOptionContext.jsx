@@ -18,8 +18,8 @@ import React, { createContext } from "react";
 
 /**
  * @typedef {Object} Machine
- * @property {string | null} value
- * @property {string | null} label
+ * @property {string | null} id
+ * @property {string | null} name
  */
 
 /**
@@ -29,6 +29,7 @@ import React, { createContext } from "react";
  * @property {Branch[]} branchData
  * @property {Branch | undefined} selectedBranch
  * @property {(value: Branch | undefined) => void} setSelectedBranch
+ * @property {Machine[]} machineData
  * @property {Machine | undefined} selectedMachine
  * @property {(value: Machine | undefined) => void} setSelectedMachine
  * @property {Date} selectedDate
