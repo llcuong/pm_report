@@ -1,13 +1,14 @@
 import { REFRESH_INTERVAL } from "@modules/pinhole/PinholeConstantData";
 import { format } from "date-fns";
 import { useEffect, useRef, useState, useTransition } from "react";
+import { getIPQCDataAPI } from "../ipqc/ipqc.service";
 
 const useDateAndMachine = ({ selectedFactory, selectedBranch }) => {
   const [selectedMachine, setSelectedMachine] = useState(undefined);
   const [machineData, setMachineData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const [viewData, setViewData] = useState({ title: null, rows: [] });
+  const [viewData, setViewData] = useState();
   const [isFetching, setIsFetching] = useState(false);
   const [isPendingUI, startTransition] = useTransition();
 
@@ -29,6 +30,7 @@ const useDateAndMachine = ({ selectedFactory, selectedBranch }) => {
     };
 
     try {
+      const resOfData = await getIPQCDataAPI(dataOptionParams);
     } catch (error) {
       console.error("Fetch error:", error);
     } finally {
