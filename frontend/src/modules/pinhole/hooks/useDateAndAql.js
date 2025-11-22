@@ -1,36 +1,10 @@
-import { startTransition, useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { getPinholeReportDataAPI } from "../pinholeServices";
-import { BRANCH_BY_FACTORY_DATA, FACTORY_DATA, REFRESH_INTERVAL } from "../PinholeConstantData";
 import { format } from "date-fns";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { REFRESH_INTERVAL } from "../PinholeConstantData";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router-dom";
+import { getPinholeReportDataAPI } from "../pinholeServices";
 
-const usePinholeSelectOptionFetcher = () => {
-  const { t } = useTranslation();
-  /****************************************************
-   *              Factory & Branch Data
-   ****************************************************/
-  const [searchParamFactory] = useSearchParams();
-
-  const [selectedFactory, setSelectedFactory] = useState(() =>
-    FACTORY_DATA.find(factory => factory.value === searchParamFactory.get('factory')) || FACTORY_DATA[0]
-  );
-
-  // Change relative branches based on selected factory
-  const branchData = useMemo(() => {
-    let key = (selectedFactory?.value || "").toLowerCase();
-    return BRANCH_BY_FACTORY_DATA.find(branch => branch.id === key).branch || []
-  }, [selectedFactory]);
-
-  const [selectedBranch, setSelectedBranch] = useState(branchData[0]);
-
-  // Set up selected branch data again
-  useEffect(() => {
-    setSelectedBranch(branchData[0]);
-  }, [branchData]);
-  /****************************************************
-   *        Aql & Date & View Data & Status
-   ****************************************************/
+const useDateAndAql = ({ selectedFactory, selectedBranch }) => {
   const [selectedAql, setSelectedAql] = useState(undefined);
   const [aqlData, setAqlData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -42,6 +16,8 @@ const usePinholeSelectOptionFetcher = () => {
   const [isAPIError, setIsAPIError] = useState(false);
 
   const reqSeq = useRef(0);
+
+  const { t } = useTranslation();
 
   const getPinholeReportData = async () => {
     const abortController = new AbortController();
@@ -102,10 +78,6 @@ const usePinholeSelectOptionFetcher = () => {
   }, [selectedBranch, selectedDate, selectedAql]);
 
   return {
-    // 
-    selectedFactory, setSelectedFactory,
-    branchData, selectedBranch, setSelectedBranch,
-
     // Data for select options
     aqlData, selectedAql, setSelectedAql,
     selectedDate, setSelectedDate,
@@ -120,4 +92,4 @@ const usePinholeSelectOptionFetcher = () => {
   };
 };
 
-export default usePinholeSelectOptionFetcher;
+export default useDateAndAql;

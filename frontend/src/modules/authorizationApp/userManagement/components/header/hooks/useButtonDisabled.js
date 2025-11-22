@@ -6,12 +6,12 @@ const useButtonDisabled = () => {
   // Button Activate
   const isActivateDisabled =
     selectedList.length === 0 ||
-    selectedList.some(user => user.accountStatus === 'Active');
+    selectedList.some(user => user.accountStatus === 'active');
 
   // Button Deactivate
   const isDeactivateDisabled =
     selectedList.length === 0 ||
-    selectedList.some(user => user.accountStatus !== 'Active');
+    selectedList.some(user => user.accountStatus !== 'active');
 
   // Button Delete
   const isDeleteDisabled = selectedList.length === 0;

@@ -5,6 +5,7 @@ import useMenuAction from "../useMenuAction";
 import { THeadAttributeConstants } from "./THeadConstants";
 import useDataTable from "../useDataTable";
 import useUserManagementContext from "@modules/authorizationApp/userManagement/contexts/useUserManagementContext";
+import { useTranslation } from "react-i18next";
 
 const THead = () => {
   const {
@@ -31,6 +32,8 @@ const THead = () => {
     close,
   } = useMenuAction();
 
+  const { t } = useTranslation();
+
   return (
     <thead>
       <tr className="text-left bg-orange-200 text-[#1b9eaf] h-12">
@@ -55,7 +58,7 @@ const THead = () => {
         {THeadAttributeConstants.map(attr => (
           <th key={attr.id} className={`relative w-${attr.width}`}>
             <div className={`${attr.requiredSort ? "flex items-center gap-2" : ""}`} ref={registerRef(attr.id)}>
-              {attr.label}
+              {t(`outlet.authUser.userManagement.body.${attr.label}`)}
               {attr.requiredSort && (
                 <button
                   type="button"
@@ -79,7 +82,7 @@ const THead = () => {
                                  font-normal ${menu.color || 'text-black'} flex gap-2 items-center`}
                     >
                       {menu.icon}
-                      {menu.label}
+                      {t(`outlet.authUser.userManagement.body.${menu.label}`)}
                     </button>
                   ))}
                 </div>

@@ -11,6 +11,7 @@ import PopUpCustom from "@components/PopUpCustom";
 import { ACTIONS } from "./actionTypes";
 import useBodyActions from "./hooks/useBodyActions";
 import usePopUp from "./hooks/usePopUp";
+import { useTranslation } from "react-i18next";
 
 const TBody = () => {
   const navigate = useNavigate();
@@ -30,7 +31,9 @@ const TBody = () => {
   // Handle clicked action
   const { confirmAction, confirmPassword, setConfirmPassword } = useBodyActions({ action, closePopup: close });
 
-  const getStatusColor = (key) => key === "Active" ? "text-green-600" : "text-yellow-600";
+  const getStatusColor = (key) => key === "active" ? "text-green-600" : "text-yellow-600";
+
+  const { t } = useTranslation();
 
   return (
     <tbody>
@@ -58,11 +61,10 @@ const TBody = () => {
           </td>
           <td className="w-[10%]">{user.id}</td>
           <td className="w-[20%]">{user.fullName}</td>
-          <td className="w-[10%]">{user.role}</td>
-          <td className="w-[20%]">{user.email}</td>
-          <td className="w-[20%]">{user.department}</td>
+          <td className="w-[10%]">{t(`outlet.authUser.userManagement.body.${user.role}`)}</td>
+          <td className="w-[20%]">{user.factory}</td>
           <td className={`w-[5%] ${getStatusColor(user.accountStatus)}`}>
-            {user.accountStatus}
+            {t(`outlet.authUser.userManagement.body.${user.accountStatus}`)}
           </td>
           <td className="relative w-[10%]">
             <div className="inline-block relative" ref={registerRef(user.id)}>
@@ -80,17 +82,17 @@ const TBody = () => {
                     onClick={() => navigate(`/auth-user/user-management/user?id=${user.id}`)}
                     className='block w-full text-left px-3 py-2 hover:bg-gray-100 rounded-lg'
                   >
-                    View details
+                    {t(`outlet.authUser.userManagement.body.viewDetails`)}
                   </button>
                   <button type="button"
                     onClick={() => {
                       setSelectedList(pagedList.filter(item => item.id === user.id));
-                      user.accountStatus === 'Active' ? open(ACTIONS.DEACTIVATE) : open(ACTIONS.ACTIVATE);
+                      user.accountStatus === 'active' ? open(ACTIONS.DEACTIVATE) : open(ACTIONS.ACTIVATE);
                     }}
                     className={`block w-full text-left px-3 py-2 hover:bg-gray-100 rounded-lg
-                                ${user.accountStatus === 'Active' ? 'text-yellow-600' : 'text-green-600'}`}
+                                ${user.accountStatus === 'active' ? 'text-yellow-600' : 'text-green-600'}`}
                   >
-                    {user.accountStatus === 'Active' ? 'Deactivate' : 'Activate'}
+                    {t(`outlet.authUser.userManagement.header.${user.accountStatus === 'active' ? 'deactivate' : 'activate'}`)}
                   </button>
                   <button type="button"
                     onClick={() => {
@@ -99,7 +101,7 @@ const TBody = () => {
                     }}
                     className='block w-full text-left px-3 py-2 hover:bg-gray-100 rounded-lg text-red-600'
                   >
-                    Delete
+                    {t('outlet.authUser.userManagement.header.delete')}
                   </button>
 
                   {isOpen && (
@@ -109,7 +111,7 @@ const TBody = () => {
                       onClose={close}
                       inputs={[
                         {
-                          label: 'Password',
+                          label: t('signIn.password'),
                           value: confirmPassword,
                           onChange: (e) => setConfirmPassword(e.target.value),
                           type: 'password',
@@ -117,7 +119,7 @@ const TBody = () => {
                       ]}
                       buttons={[
                         {
-                          label: 'Cancel',
+                          label: t('outlet.authUser.userManagement.view.cancel'),
                           bg: "#ff3a3a",
                           textColor: "#fff",
                           onClick: () => {

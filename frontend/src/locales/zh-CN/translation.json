@@ -28,7 +28,80 @@
         "noData": "无数据"
       }
     },
-    "admin": {}
+    "authUser": {
+      "userManagement": {
+        "header": {
+          "authorizedUser": "授权用户",
+          "searchPlaceholder": "按用户ID或姓名搜索...",
+          "addNewUser": "新增用户",
+          "activate": "启用",
+          "deactivate": "停用",
+          "delete": "永久删除"
+        },
+        "body": {
+          "userId": "用户 ID",
+          "fullName": "全名",
+          "role": "角色",
+          "email": "邮箱",
+          "phoneNumber": "电话号码",
+          "factory": "工厂",
+          "status": "状态",
+          "active": "启用",
+          "inactive": "停用",
+          "noSort": "无排序",
+          "asc": "升序",
+          "desc": "降序",
+          "viewDetails": "查看详情",
+          "supervisor": "主管",
+          "admin": "管理员"
+        },
+        "add": {
+          "addUser": "新增用户",
+          "personalInformation": "个人信息",
+          "accountInformation": "账户信息",
+          "defaultPassword": "默认密码",
+          "selectFactory": "选择工厂",
+          "all": "全部"
+        },
+        "view": {
+          "edit": "编辑",
+          "update": "更新",
+          "cancel": "取消",
+          "setDefaultPassword": "设置默认密码"
+        },
+        "popup": {
+          "title": {
+            "update": "更新用户信息",
+            "delete": "删除用户账户",
+            "resetDefaultPassword": "重置默认密码",
+            "activate": "启用用户",
+            "deactivate": "停用用户"
+          },
+          "description": {
+            "update": "将更新用户信息。请输入密码以确认更改。",
+            "delete": "将永久删除该用户。请输入密码以确认更改。",
+            "resetDefaultPassword": "将重置密码。请输入密码以确认更改。",
+            "activate": "将启用账户。请输入密码以确认更改。",
+            "deactivate": "将停用账户。请输入密码以确认更改。"
+          }
+        }
+      },
+      "profile": {
+        "dataFields": {
+          "profileInformation": "個人資料資訊",
+          "updateProfile": "更新個人資料",
+          "passwordSection": "密碼區塊",
+          "changeNewPassword": "更改新密碼",
+          "currentPassword": "目前密碼",
+          "newPassword": "新密碼",
+          "confirmPassword": "確認密碼"
+        },
+        "popup": {
+          "title": "更新個人資料",
+          "description": "這將更新您的個人資料更改。請輸入密碼以確認更改。"
+        }
+      }
+    }
   },
   "signIn": {
     "signInTitle": "登录到 PM 报告系统",
@@ -52,6 +125,23 @@
   },
   "error": {
     "internalServerError": "服务器内部错误！"
+  },
+  "popup": {
+    "buttons": {
+      "update": "更新",
+      "delete": "永久删除",
+      "resetDefaultPassword": "重置默认密码",
+      "activate": "启用",
+      "deactivate": "停用",
+      "save": "儲存",
+      "cancel": "取消"
+    },
+    "title": {
+      "changePassword": "更改密碼"
+    },
+    "description": {
+      "changePassword": "這將更改您的密碼。請妥善保管密碼。"
+    }
   },
   "language": "语言"
 }

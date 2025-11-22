@@ -9,7 +9,7 @@ const MainUserManagement = () => {
       <UserManagementProvider>
         <UserManagementHeader />
         <DataTable />
-        <Paging />
+        {/* <Paging /> */}
       </UserManagementProvider>
     </div>
   );

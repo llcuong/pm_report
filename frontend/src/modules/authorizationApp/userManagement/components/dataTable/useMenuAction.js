@@ -12,6 +12,8 @@ const useMenuAction = () => {
     setOpenId(prev => (prev === id ? null : id));
   };
 
+  const close = () => setOpenId(null);
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!openId) return;
@@ -30,6 +32,7 @@ const useMenuAction = () => {
     openId,
     toggle,
     registerRef,
+    close
   };
 };
 

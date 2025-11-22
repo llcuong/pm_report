@@ -7,7 +7,7 @@ const useUserAddNew = () => {
     email: "",
     phoneNumber: "",
     role: "Superuser",
-    department: "",
+    factory: "",
     accountStatus: "Active",
     password: "123456",
   });
@@ -24,7 +24,7 @@ const useUserAddNew = () => {
   };
 
   const handleSubmit = () => {
-    if (!form.fullName || !form.department) {
+    if (!form.fullName || !form.factory) {
       alert("Please fill all required fields.");
       return;
     }

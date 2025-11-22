@@ -28,7 +28,80 @@
         "noData": "Không có dữ liệu"
       }
     },
-    "admin": {}
+    "authUser": {
+      "userManagement": {
+        "header": {
+          "authorizedUser": "Người dùng được cấp quyền",
+          "searchPlaceholder": "Tìm người dùng theo ID hoặc tên...",
+          "addNewUser": "Thêm người dùng mới",
+          "activate": "Kích hoạt",
+          "deactivate": "Vô hiệu hóa",
+          "delete": "Xóa vĩnh viễn"
+        },
+        "body": {
+          "userId": "Mã người dùng",
+          "fullName": "Họ và tên",
+          "role": "Vai trò",
+          "email": "Email",
+          "phoneNumber": "Số điện thoại",
+          "factory": "Nhà máy",
+          "status": "Trạng thái",
+          "active": "Kích hoạt",
+          "inactive": "Vô hiệu hóa",
+          "noSort": "Không sắp xếp",
+          "asc": "Tăng dần",
+          "desc": "Giảm dần",
+          "viewDetails": "Xem chi tiết",
+          "supervisor": "Giám sát",
+          "admin": "Quản trị viên"
+        },
+        "add": {
+          "addUser": "Thêm người dùng",
+          "personalInformation": "Thông tin cá nhân",
+          "accountInformation": "Thông tin tài khoản",
+          "defaultPassword": "Mật khẩu mặc định",
+          "selectFactory": "Chọn nhà máy",
+          "all": "Tất cả"
+        },
+        "view": {
+          "edit": "Chỉnh sửa",
+          "update": "Cập nhật",
+          "cancel": "Hủy",
+          "setDefaultPassword": "Đặt mật khẩu mặc định"
+        },
+        "popup": {
+          "title": {
+            "update": "Cập nhật thông tin người dùng",
+            "delete": "Xóa tài khoản người dùng",
+            "resetDefaultPassword": "Đặt lại mật khẩu mặc định",
+            "activate": "Kích hoạt người dùng",
+            "deactivate": "Vô hiệu hóa người dùng"
+          },
+          "description": {
+            "update": "Hành động này sẽ cập nhật thông tin người dùng. Vui lòng nhập mật khẩu để xác nhận thay đổi.",
+            "delete": "Hành động này sẽ xóa vĩnh viễn người dùng. Vui lòng nhập mật khẩu để xác nhận thay đổi.",
+            "resetDefaultPassword": "Hành động này sẽ đặt lại mật khẩu. Vui lòng nhập mật khẩu để xác nhận thay đổi.",
+            "activate": "Hành động này sẽ kích hoạt tài khoản. Vui lòng nhập mật khẩu để xác nhận thay đổi.",
+            "deactivate": "Hành động này sẽ vô hiệu hóa tài khoản. Vui lòng nhập mật khẩu để xác nhận thay đổi."
+          }
+        }
+      },
+      "profile": {
+        "dataFields": {
+          "profileInformation": "个人资料信息",
+          "updateProfile": "更新个人资料",
+          "passwordSection": "密码部分",
+          "changeNewPassword": "修改新密码",
+          "currentPassword": "当前密码",
+          "newPassword": "新密码",
+          "confirmPassword": "确认密码"
+        },
+        "popup": {
+          "title": "更新个人资料",
+          "description": "这将更新您的个人资料更改。请输入密码以确认更改。"
+        }
+      }
+    }
   },
   "signIn": {
     "signInTitle": "Đăng nhập vào hệ thống PM Report",
@@ -52,6 +125,23 @@
   },
   "error": {
     "internalServerError": "Lỗi máy chủ nội bộ!"
+  },
+  "popup": {
+    "buttons": {
+      "update": "Cập nhật",
+      "delete": "Xóa vĩnh viễn",
+      "resetDefaultPassword": "Đặt lại mật khẩu mặc định",
+      "activate": "Kích hoạt",
+      "deactivate": "Vô hiệu hóa",
+      "save": "保存",
+      "cancel": "取消"
+    },
+    "title": {
+      "changePassword": "修改密码"
+    },
+    "description": {
+      "changePassword": "这将修改您的密码。请妥善保管密码。"
+    }
   },
   "language": "Ngôn ngữ"
 }

@@ -13,10 +13,6 @@ const AvatarSection = () => {
 
       <h2 className="text-xl font-semibold mt-4">{"Admin Name"}</h2>
       <p className="text-gray-500">{"admin@example.com"}</p>
-
-      <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-        Change Avatar
-      </button>
     </div>
   );
 };

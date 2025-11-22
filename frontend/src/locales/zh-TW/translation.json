@@ -28,7 +28,80 @@
         "noData": "無資料"
       }
     },
-    "admin": {}
+    "authUser": {
+      "userManagement": {
+        "header": {
+          "authorizedUser": "授權使用者",
+          "searchPlaceholder": "以使用者ID或姓名搜尋...",
+          "addNewUser": "新增使用者",
+          "activate": "啟用",
+          "deactivate": "停用",
+          "delete": "永久刪除"
+        },
+        "body": {
+          "userId": "使用者 ID",
+          "fullName": "全名",
+          "role": "角色",
+          "email": "電子郵件",
+          "phoneNumber": "電話號碼",
+          "factory": "工廠",
+          "status": "狀態",
+          "active": "啟用",
+          "inactive": "停用",
+          "noSort": "無排序",
+          "asc": "升冪",
+          "desc": "降冪",
+          "viewDetails": "查看詳情",
+          "supervisor": "主管",
+          "admin": "管理員"
+        },
+        "add": {
+          "addUser": "新增使用者",
+          "personalInformation": "個人資訊",
+          "accountInformation": "帳號資訊",
+          "defaultPassword": "預設密碼",
+          "selectFactory": "選擇工廠",
+          "all": "全部"
+        },
+        "view": {
+          "edit": "編輯",
+          "update": "更新",
+          "cancel": "取消",
+          "setDefaultPassword": "設定預設密碼"
+        },
+        "popup": {
+          "title": {
+            "update": "更新使用者資訊",
+            "delete": "刪除使用者帳號",
+            "resetDefaultPassword": "重設預設密碼",
+            "activate": "啟用使用者",
+            "deactivate": "停用使用者"
+          },
+          "description": {
+            "update": "將更新使用者資訊。請輸入密碼以確認更改。",
+            "delete": "將永久刪除該使用者。請輸入密碼以確認更改。",
+            "resetDefaultPassword": "將重設密碼。請輸入密碼以確認更改。",
+            "activate": "將啟用帳號。請輸入密碼以確認更改。",
+            "deactivate": "將停用帳號。請輸入密碼以確認更改。"
+          }
+        }
+      },
+      "profile": {
+        "dataFields": {
+          "profileInformation": "Thông tin hồ sơ",
+          "updateProfile": "Cập nhật hồ sơ",
+          "passwordSection": "Phần mật khẩu",
+          "changeNewPassword": "Đổi mật khẩu mới",
+          "currentPassword": "Mật khẩu hiện tại",
+          "newPassword": "Mật khẩu mới",
+          "confirmPassword": "Xác nhận mật khẩu"
+        },
+        "popup": {
+          "title": "Cập nhật hồ sơ",
+          "description": "Hành động này sẽ cập nhật các thay đổi trong hồ sơ của bạn. Vui lòng nhập mật khẩu để xác nhận thay đổi."
+        }
+      }
+    }
   },
   "signIn": {
     "signInTitle": "登入至 PM 報告系統",
@@ -52,6 +125,23 @@
   },
   "error": {
     "internalServerError": "伺服器內部錯誤！"
+  },
+  "popup": {
+    "buttons": {
+      "update": "更新",
+      "delete": "永久刪除",
+      "resetDefaultPassword": "重設預設密碼",
+      "activate": "啟用",
+      "deactivate": "停用",
+      "save": "Lưu",
+      "cancel": "Hủy"
+    },
+    "title": {
+      "changePassword": "Đổi mật khẩu"
+    },
+    "description": {
+      "changePassword": "Hành động này sẽ đổi mật khẩu của bạn. Vui lòng giữ và bảo mật mật khẩu."
+    }
   },
   "language": "語言"
 }

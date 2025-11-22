@@ -1,5 +1,6 @@
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import useUserAddNew from "./useUserAddNew";
+import { useTranslation } from "react-i18next";
 
 const UserAddNew = () => {
   const {
@@ -10,48 +11,50 @@ const UserAddNew = () => {
     handleSubmit
   } = useUserAddNew();
 
+  const { t } = useTranslation();
+
   const requiredLabel = (text) => (
     <label className="font-medium">
-      <span className="text-[#1b9eaf]">{text}</span> <span className="text-red-500">*</span>
+      <span className="text-[#1b9eaf]">{t(`outlet.authUser.userManagement.body.${text}`)}</span> <span className="text-red-500">*</span>
     </label>
   );
 
   return (
     <div className="w-1/3 mt-5 h-220 mx-auto bg-white shadow-md p-6 rounded-xl flex flex-col">
       <div className="mb-6 flex gap-4 items-center justify-between">
-        <h2 className="text-2xl font-bold text-[#1b9eaf]">Add New User</h2>
+        <h2 className="text-2xl font-bold text-[#1b9eaf]">{t('outlet.authUser.userManagement.header.addNewUser')}</h2>
         <button type="button" name="add"
           onClick={handleSubmit}
           className="px-6 py-2 bg-green-600 text-white rounded-lg font-medium 
                      transition-colors duration-200 cursor-pointer hover:bg-green-800"
         >
-          Add User
+          {t('outlet.authUser.userManagement.add.addUser')}
         </button>
       </div>
 
       <div className="h-0.5 bg-gray-400 mb-6" />
 
       <div>
-        <h3 className="text-xl font-semibold text-[#1b9eaf] mb-6">Personal Information</h3>
+        <h3 className="text-xl font-semibold text-[#1b9eaf] mb-6">{t(`outlet.authUser.userManagement.add.personalInformation`)}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
           <div className="flex flex-col gap-4">
             <div>
-              {requiredLabel("User ID")}
+              {requiredLabel("userId")}
               <input
                 type="text"
                 name="userId"
-                placeholder="User ID"
+                placeholder={t('outlet.authUser.userManagement.body.userId')}
                 value={form.userId}
                 onChange={handleChange}
                 className="w-full p-2 border rounded-lg"
               />
             </div>
             <div>
-              {requiredLabel("Full Name")}
+              {requiredLabel("fullName")}
               <input
                 type="text"
                 name="fullName"
-                placeholder="Full Name"
+                placeholder={t('outlet.authUser.userManagement.body.fullName')}
                 value={form.fullName}
                 onChange={handleChange}
                 className="w-full p-2 border rounded-lg"
@@ -60,22 +63,22 @@ const UserAddNew = () => {
           </div>
           <div className="flex flex-col gap-4">
             <div>
-              <label className="font-medium text-[#1b9eaf]">Email</label>
+              <label className="font-medium text-[#1b9eaf]">{t(`outlet.authUser.userManagement.body.email`)}</label>
               <input
                 type="email"
                 name="email"
-                placeholder="Email"
+                placeholder={t('outlet.authUser.userManagement.body.email')}
                 value={form.email}
                 onChange={handleChange}
                 className="w-full p-2 border rounded-lg"
               />
             </div>
             <div>
-              <label className="font-medium text-[#1b9eaf]">Phone Number</label>
+              <label className="font-medium text-[#1b9eaf]">{t(`outlet.authUser.userManagement.body.phoneNumber`)}</label>
               <input
                 type="text"
                 name="phoneNumber"
-                placeholder="Phone Number"
+                placeholder={t('outlet.authUser.userManagement.body.phoneNumber')}
                 value={form.phoneNumber}
                 onChange={handleChange}
                 className="w-full p-2 border rounded-lg"
@@ -88,58 +91,60 @@ const UserAddNew = () => {
       <div className="h-0.5 bg-gray-400 mb-6" />
 
       <div>
-        <h3 className="text-xl font-semibold text-[#1b9eaf] mb-6">Account Information</h3>
+        <h3 className="text-xl font-semibold text-[#1b9eaf] mb-6">{t(`outlet.authUser.userManagement.add.accountInformation`)}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col gap-4">
             <div>
-              {requiredLabel("Role")}
+              {requiredLabel("role")}
               <select
                 name="role"
                 value={form.role}
                 onChange={handleChange}
                 className="w-full p-2 border rounded-lg cursor-pointer"
               >
-                <option value="superuser">Superuser</option>
-                <option value="admin">Admin</option>
+                <option value="supervisor">{t(`outlet.authUser.userManagement.body.supervisor`)}</option>
+                <option value="admin">{t(`outlet.authUser.userManagement.body.admin`)}</option>
               </select>
             </div>
             <div>
-              {requiredLabel("Department")}
+              {requiredLabel("factory")}
               <select
-                name="department"
-                value={form.department}
+                name="factory"
+                value={form.factory}
                 onChange={handleChange}
                 className="w-full p-2 border rounded-lg cursor-pointer"
               >
-                <option disabled value="">Select department</option>
+                <option disabled value="">{t(`outlet.authUser.userManagement.add.selectFactory`)}</option>
                 <option value="gd">Giang Dien</option>
                 <option value="lt">Long Thanh</option>
                 <option value="lk">Long Khanh</option>
-                <option value="all">All</option>
+                <option value="all">{t(`outlet.authUser.userManagement.add.all`)}</option>
               </select>
             </div>
           </div>
 
           <div className="flex flex-col gap-4">
             <div>
-              {requiredLabel("Account Status")}
+              {requiredLabel("status")}
               <select
                 name="accountStatus"
                 value={form.accountStatus}
                 onChange={handleChange}
                 className="w-full p-2 border rounded-lg cursor-pointer"
               >
-                <option value="active" className="text-green-600">Active</option>
-                <option value="inactive" className="text-yellow-600">Inactive</option>
+                <option value="active" className="text-green-600">{t(`outlet.authUser.userManagement.body.active`)}</option>
+                <option value="inactive" className="text-yellow-600">{t(`outlet.authUser.userManagement.body.inactive`)}</option>
               </select>
             </div>
             <div className="relative">
-              {requiredLabel("Default Password")}
+              <label className="font-medium">
+                <span className="text-[#1b9eaf]">{t('outlet.authUser.userManagement.add.defaultPassword')}</span> <span className="text-red-500">*</span>
+              </label>
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={form.password}
-                placeholder="Default Password"
+                placeholder={t('outlet.authUser.userManagement.add.defaultPassword')}
                 onChange={handleChange}
                 className="w-full p-2 border rounded-lg pr-10"
               />
