@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 const MenuHeadSeparated = () => {
+  const { t } = useTranslation();
   const width = 100;
   const height = 56;
   const diagonal = Math.sqrt(width ** 2 + height ** 2);
@@ -15,8 +18,8 @@ const MenuHeadSeparated = () => {
           transform: `rotate(${angle}deg)`,
           transformOrigin: "top left",
         }} />
-      <span className="absolute top-1 right-1 text-xs font-bold">Machine</span>
-      <span className="absolute bottom-2 left-2 text-xs font-bold">Hour</span>
+      <span className="absolute top-1 right-1 text-xs font-bold">{t('outlet.authUser.ipqcData.body.machine')}</span>
+      <span className="absolute bottom-2 left-2 text-xs font-bold">{t('outlet.authUser.ipqcData.body.hour')}</span>
     </div>
   );
 };
