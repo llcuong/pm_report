@@ -7,3 +7,12 @@ def __get_factory_mes_database__(factory):
         return lkmes_database()
     else:
         return gdmes_database()
+    
+
+def get_factory_mes_db(factory):
+    if factory == 'LT':
+        return ltmes_database()
+    elif factory == 'LK':
+        return lkmes_database()
+    else:
+        return gdmes_database()
