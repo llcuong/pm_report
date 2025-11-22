@@ -100,6 +100,18 @@
           "title": "Update profile",
           "description": "This will update the changes of your profile. Please enter your password to confirm changes."
         }
+      },
+      "ipqcData": {
+        "body": {
+          "hour": "Hour",
+          "machine": "Machine"
+        }
+      },
+      "countingData": {
+        "header": {
+          "daily": "Daily",
+          "hourly": "Hourly"
+        }
       }
     }
   },
@@ -142,6 +154,14 @@
     "description": {
       "changePassword": "This will change your password. Please keep and secure password."
     }
+  },
+  "selectOption": {
+    "selectFactory": "Select factory",
+    "selectBranch": "Select branch",
+    "selectMachine": "Select machine",
+    "selectAql": "Select aql",
+    "selectDate": "Select date",
+    "selectMode": "Select mode"
   },
   "language": "Language"
 }

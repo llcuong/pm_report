@@ -100,6 +100,18 @@
           "title": "更新个人资料",
           "description": "这将更新您的个人资料更改。请输入密码以确认更改。"
         }
+      },
+      "ipqcData": {
+        "body": {
+          "hour": "Giờ",
+          "machine": "Máy"
+        }
+      },
+      "countingData": {
+        "header": {
+          "daily": "Theo ngày",
+          "hourly": "Theo giờ"
+        }
       }
     }
   },
@@ -142,6 +154,14 @@
     "description": {
       "changePassword": "这将修改您的密码。请妥善保管密码。"
     }
+  },
+  "selectOption": {
+    "selectFactory": "Chọn nhà máy",
+    "selectBranch": "Chọn chi nhánh",
+    "selectMachine": "Chọn máy",
+    "selectAql": "Chọn AQL",
+    "selectDate": "Chọn ngày",
+    "selectMode": "Chọn chế độ"
   },
   "language": "Ngôn ngữ"
 }

@@ -100,6 +100,18 @@
           "title": "Cập nhật hồ sơ",
           "description": "Hành động này sẽ cập nhật các thay đổi trong hồ sơ của bạn. Vui lòng nhập mật khẩu để xác nhận thay đổi."
         }
+      },
+      "ipqcData": {
+        "body": {
+          "hour": "小時",
+          "machine": "機器"
+        }
+      },
+      "countingData": {
+        "header": {
+          "daily": "每日",
+          "hourly": "每小時"
+        }
       }
     }
   },
@@ -142,6 +154,14 @@
     "description": {
       "changePassword": "Hành động này sẽ đổi mật khẩu của bạn. Vui lòng giữ và bảo mật mật khẩu."
     }
+  },
+  "selectOption": {
+    "selectFactory": "選擇工廠",
+    "selectBranch": "選擇分廠",
+    "selectMachine": "選擇機器",
+    "selectAql": "選擇 AQL",
+    "selectDate": "選擇日期",
+    "selectMode": "選擇模式"
   },
   "language": "語言"
 }

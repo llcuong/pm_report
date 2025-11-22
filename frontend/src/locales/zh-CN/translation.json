@@ -100,6 +100,18 @@
           "title": "更新個人資料",
           "description": "這將更新您的個人資料更改。請輸入密碼以確認更改。"
         }
+      },
+      "ipqcData": {
+        "body": {
+          "hour": "小时",
+          "machine": "机器"
+        }
+      },
+      "countingData": {
+        "header": {
+          "daily": "每日",
+          "hourly": "每小时"
+        }
       }
     }
   },
@@ -142,6 +154,14 @@
     "description": {
       "changePassword": "這將更改您的密碼。請妥善保管密碼。"
     }
+  },
+  "selectOption": {
+    "selectFactory": "选择工厂",
+    "selectBranch": "选择分厂",
+    "selectMachine": "选择机器",
+    "selectAql": "选择 AQL",
+    "selectDate": "选择日期",
+    "selectMode": "选择模式"
   },
   "language": "语言"
 }
