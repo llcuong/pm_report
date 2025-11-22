@@ -1,7 +1,7 @@
 import { REFRESH_INTERVAL } from "@modules/pinhole/PinholeConstantData";
 import { format } from "date-fns";
-import { useEffect, useRef, useState, useTransition } from "react";
-import { getIPQCDataAPI } from "../ipqc/ipqc.service";
+import { useEffect, useRef, useState, useTransition } from "react"
+import ipqcServices from "../ipqc/ipqcServices";
 
 const useDateAndMachine = ({ selectedFactory, selectedBranch }) => {
   const [selectedMachine, setSelectedMachine] = useState(undefined);
@@ -21,16 +21,7 @@ const useDateAndMachine = ({ selectedFactory, selectedBranch }) => {
     const seq = ++reqSeq.current;
     setIsFetching(true);
 
-    const dataOptionParams = {
-      machine: selectedMachine?.value || "",
-      factory: selectedFactory?.value || "",
-      branch: selectedBranch?.value || "",
-      date: format(selectedDate, "yyyy-MM-dd"),
-      signal: abortController.signal,
-    };
-
     try {
-      const resOfData = await getIPQCDataAPI(dataOptionParams);
     } catch (error) {
       console.error("Fetch error:", error);
     } finally {
