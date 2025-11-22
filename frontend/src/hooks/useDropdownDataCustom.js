@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { LANG } from "./useLang";
-import { LANGUAGE_LIST } from "@constants/LanguageList";
 
 const useDropdownDataCustom = (value = null, onChange) => {
   const [isOpen, setIsOpen] = useState(false);
