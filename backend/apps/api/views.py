@@ -57,7 +57,7 @@ class MachineView(APIView):
                 ORDER BY MachineId
             """
 
-            db = get_factory_mes_db(factory)
+            db = __get_factory_mes_database__(factory)
             data = db.select_sql_dict(sql)
 
         return Response(data)
@@ -114,7 +114,7 @@ class IPQCView(APIView):
                 AND CAST(rc.CreationTime AS DATE) = '{date}'
             """
         
-        db = get_factory_mes_db(factory)
+        db = __get_factory_mes_database__(factory)
         # db = sap_database()
         data = db.select_sql_dict(sql)
 
