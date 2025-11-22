@@ -21,7 +21,6 @@ def api_response(data=None, message="", success=True, error_code=None, status_co
     }, status=status_code)
 
 
-
 class CustomJSONRenderer(JSONRenderer):
     def render(self, data, accepted_media_type=None, renderer_context=None):
         
@@ -32,10 +31,10 @@ class CustomJSONRenderer(JSONRenderer):
             message =  'Data not found',
             data = None
         else:
-                
             success = renderer_context['response'].status_code in range(200, 300),
             message =  data[0].get('message', 'Fetched successfully'),
             data = data
+            errorCode = None
 
         response =  {
             "success": success[0],
