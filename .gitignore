@@ -11,6 +11,8 @@ frontend/yarn-error.log*
 frontend/pnpm-debug.log*
 frontend/lerna-debug.log*
 
+backend/.history
+backend/.vscode
 
 .idea/
 .vscode/*
