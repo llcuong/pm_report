@@ -48,12 +48,12 @@ class MachineView(APIView):
         branch = request.GET.get('branch', '').strip("'")
         data = []
 
-        if factory in ('GD', 'LK', 'LT') and branch in ('NBR', 'PVC'):
+        if factory in ('gd', 'lk', 'lt') and branch in ('nbr', 'pvc'):
 
             sql = f"""
                 SELECT DISTINCT [MachineId],[MachineName]
                 FROM [PMGMES].[dbo].[PMG_MES_RunCard]
-                WHERE MachineName LIKE '%{factory}%' AND WorkCenterTypeName = '{branch}'
+                WHERE MachineName LIKE '%{factory}%' AND WorkCenterTypeName LIKE '{branch}'
                 ORDER BY MachineId
             """
 
@@ -109,8 +109,8 @@ class IPQCView(APIView):
                 LEFT JOIN [PMGMES].[dbo].[PMG_MES_RunCard] rc
                 ON ipqc.Runcard = rc.id
                 WHERE rc.WorkCenterName LIKE '%{factory}%'
-                AND rc.WorkCenterTypeName='{branch}'
-                AND rc.MachineName='{machine}'
+                AND rc.WorkCenterTypeName LIKE'{branch}'
+                AND rc.MachineName LIKE '{machine}'
                 AND CAST(rc.CreationTime AS DATE) = '{date}'
             """
         
